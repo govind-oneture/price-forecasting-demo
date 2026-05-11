@@ -1,0 +1,4759 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aranca Analytics — Price Forecasting</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --navy: #0b1e3d;
+        --navy2: #152d52;
+        --navy3: #1d3a68;
+        --accent: #2563eb;
+        --accent2: #1d4ed8;
+        --green: #16a34a;
+        --red: #dc2626;
+        --amber: #d97706;
+        --bg: #f1f5f9;
+        --card: #fff;
+        --border: #e2e8f0;
+        --text: #0f172a;
+        --muted: #64748b;
+        --light: #f8fafc;
+        --tag-bg: #eff6ff;
+        --tag: #1d4ed8;
+        --shadow-sm:
+          0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+        --shadow-md:
+          0 4px 12px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.04);
+        --radius: 14px;
+      }
+      body {
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 14px;
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+      }
+      .app {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* TOP NAV */
+      .topnav {
+        background: linear-gradient(135deg, #0b1e3d 0%, #152d52 100%);
+        display: flex;
+        align-items: center;
+        padding: 0 24px;
+        height: 56px;
+        gap: 4px;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+      .logo {
+        color: #fff;
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: -0.3px;
+        margin-right: 24px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .logo-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #1a7fd4;
+      }
+      .nav-item {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 13px;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.15s;
+        white-space: nowrap;
+        border: none;
+        background: none;
+      }
+      .nav-item:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .nav-item.active {
+        color: #fff;
+        background: rgba(37, 99, 235, 0.35);
+        font-weight: 600;
+      }
+      .nav-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .bell-btn {
+        color: rgba(255, 255, 255, 0.7);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        font-size: 18px;
+        position: relative;
+      }
+      .badge {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #e0433a;
+        border: 2px solid var(--navy);
+      }
+      .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #1a7fd4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      /* SCREENS */
+      .screen {
+        display: none;
+        flex: 1;
+        overflow: auto;
+      }
+      .screen.active {
+        display: block;
+      }
+
+      /* ---------- SCREEN: LOGIN ---------- */
+      .login-wrap {
+        min-height: calc(100vh - 52px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(145deg, #0b1e3d 0%, #1d3a68 100%);
+        padding: 40px 20px;
+      }
+      .login-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 44px;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      }
+      .login-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+      .login-logo-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #1a7fd4;
+      }
+      .login-logo span {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .login-sub {
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 28px;
+      }
+      .form-group {
+        margin-bottom: 16px;
+      }
+      .form-label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+      }
+      .form-input {
+        width: 100%;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 14px;
+        outline: none;
+        transition: border 0.15s;
+      }
+      .form-input:focus {
+        border-color: var(--accent);
+      }
+      .form-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .check-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .forgot {
+        font-size: 13px;
+        color: var(--accent);
+        cursor: pointer;
+      }
+      .btn-primary {
+        width: 100%;
+        background: var(--navy);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-bottom: 10px;
+        transition: background 0.15s;
+      }
+      .btn-primary:hover {
+        background: var(--navy3);
+      }
+      .btn-secondary-lg {
+        width: 100%;
+        background: #fff;
+        color: var(--navy);
+        border: 1.5px solid #d1d5db;
+        border-radius: 8px;
+        padding: 11px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .btn-secondary-lg:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 16px 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #e5e7eb;
+      }
+      .mfa-section {
+        display: none;
+        background: #ebf4ff;
+        border-radius: 10px;
+        padding: 16px;
+        margin-top: 16px;
+      }
+      .mfa-section.show {
+        display: block;
+      }
+      .otp-inputs {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .otp-input {
+        width: 42px;
+        height: 48px;
+        border: 1.5px solid #d1d5db;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 600;
+      }
+      .mfa-note {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 8px;
+      }
+      .error-banner {
+        background: #fee2e2;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        padding: 10px 14px;
+        color: #991b1b;
+        font-size: 13px;
+        margin-bottom: 16px;
+        display: none;
+      }
+      .error-banner.show {
+        display: block;
+      }
+
+      /* ---------- SCREEN: DASHBOARD ---------- */
+      .page-content {
+        padding: 20px 24px;
+      }
+      .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .page-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .date-range-strip {
+        display: flex;
+        gap: 4px;
+      }
+      .dr-btn {
+        padding: 5px 12px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: #fff;
+        font-size: 12px;
+        cursor: pointer;
+        color: var(--muted);
+      }
+      .dr-btn.active {
+        background: var(--navy);
+        color: #fff;
+        border-color: var(--navy);
+      }
+      .kpi-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      .kpi-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.2s ease;
+      }
+      .kpi-card:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-1px);
+      }
+      .kpi-label {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      .kpi-val {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .kpi-sub {
+        font-size: 11px;
+        margin-top: 4px;
+      }
+      .kpi-up {
+        color: var(--green);
+      }
+      .kpi-dn {
+        color: var(--red);
+      }
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .dashboard-grid.three {
+        grid-template-columns: 1.6fr 1fr;
+      }
+      .widget {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        box-shadow: var(--shadow-sm);
+        transition: box-shadow 0.2s ease;
+      }
+      .widget:hover {
+        box-shadow: var(--shadow-md);
+      }
+      .widget-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        margin-bottom: 14px;
+      }
+      .heatmap {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 4px;
+      }
+      .heat-cell {
+        border-radius: 6px;
+        padding: 8px 4px;
+        text-align: center;
+        font-size: 10px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .h-up {
+        background: #fde8e8;
+        color: #991b1b;
+      }
+      .h-dn {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .h-neu {
+        background: #f3f4f6;
+        color: #374151;
+      }
+      .mover-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 7px 0;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .mover-row:last-child {
+        border-bottom: none;
+      }
+      .mover-name {
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .mover-val {
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .mover-spark {
+        width: 60px;
+        height: 24px;
+      }
+      .watchlist-card {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .wl-item {
+        background: var(--light);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px;
+      }
+      .wl-name {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .wl-price {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--navy);
+        margin: 2px 0;
+      }
+      .signal-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .signal-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 12px;
+        background: var(--light);
+        border-radius: 8px;
+      }
+      .signal-badge {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 20px;
+      }
+      .sb-bull {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .sb-bear {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .sb-neu {
+        background: #f3f4f6;
+        color: #4b5563;
+      }
+      .news-feed {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .news-item {
+        padding: 8px 0;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .news-item:last-child {
+        border-bottom: none;
+      }
+      .news-tag {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background: var(--tag-bg);
+        color: var(--tag);
+      }
+      .news-headline {
+        font-size: 13px;
+        margin-top: 4px;
+        line-height: 1.4;
+      }
+      .news-time {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .donut-wrap {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .donut-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+      }
+      .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      /* ---------- SCREEN: PRICE CHARTS ---------- */
+      .chart-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        margin-bottom: 16px;
+        align-items: center;
+        box-shadow: var(--shadow-sm);
+      }
+      .toolbar-group {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .tb-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+      .tb-select {
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 5px 8px;
+        font-size: 12px;
+        background: #fff;
+        cursor: pointer;
+      }
+      .tb-btn {
+        padding: 5px 10px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: #fff;
+        font-size: 12px;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .tb-btn.active {
+        background: var(--navy);
+        color: #fff;
+        border-color: var(--navy);
+      }
+      .chart-area-wrap {
+        display: grid;
+        grid-template-columns: 1fr 280px;
+        gap: 16px;
+      }
+      .chart-container {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        box-shadow: var(--shadow-sm);
+      }
+      .chart-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+      .chart-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .chart-price {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .chart-change {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .chart-svg-wrap {
+        width: 100%;
+        background: var(--light);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .annotation-tip {
+        background: rgba(11, 30, 61, 0.85);
+        color: #fff;
+        font-size: 11px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        position: absolute;
+        pointer-events: none;
+        display: none;
+      }
+      .price-drivers-panel {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        box-shadow: var(--shadow-sm);
+      }
+      .driver-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .driver-row:last-child {
+        border-bottom: none;
+      }
+      .driver-name {
+        font-size: 13px;
+        color: var(--text);
+      }
+      .driver-status {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 20px;
+      }
+      .ds-tight {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .ds-high {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .ds-weak {
+        background: #ede9fe;
+        color: #4c1d95;
+      }
+      .ds-elev {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .ds-rise {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .ds-mod {
+        background: #f3f4f6;
+        color: #374151;
+      }
+      .ds-alert {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .driver-trend {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      /* ---------- SCREEN: FORECASTING ---------- */
+      .forecast-layout {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 16px;
+      }
+      .forecast-main {
+      }
+      .forecast-top {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow-sm);
+      }
+      .horizon-tabs {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 16px;
+      }
+      .horizon-tab {
+        padding: 6px 14px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        background: #fff;
+      }
+      .horizon-tab.active {
+        background: var(--navy);
+        color: #fff;
+        border-color: var(--navy);
+      }
+      .hedging-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 700;
+        margin: 16px 0;
+      }
+      .hb-full {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .hb-partial {
+        background: #fef9c3;
+        color: #713f12;
+      }
+      .hb-plan {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .hb-avoid {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .scenario-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+      }
+      .scenario-table th {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: var(--muted);
+        text-align: left;
+        padding: 8px 12px;
+        background: var(--light);
+        border-bottom: 1px solid var(--border);
+      }
+      .scenario-table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid #f9fafb;
+        font-size: 13px;
+      }
+      .scenario-table tr:last-child td {
+        border-bottom: none;
+      }
+      .sc-bull {
+        color: var(--green);
+        font-weight: 700;
+      }
+      .sc-bear {
+        color: var(--red);
+        font-weight: 700;
+      }
+      .sc-base {
+        color: var(--accent);
+        font-weight: 700;
+      }
+      .forecast-sidebar {
+      }
+      .sidebar-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow-sm);
+      }
+      .analyst-note {
+        font-size: 13px;
+        line-height: 1.6;
+        color: var(--text);
+      }
+      .macro-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .macro-item {
+        background: var(--light);
+        border-radius: 8px;
+        padding: 10px;
+      }
+      .macro-label {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .macro-val {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--navy);
+        margin-top: 2px;
+      }
+      .accuracy-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 0;
+      }
+      .acc-bar-wrap {
+        width: 80px;
+        height: 6px;
+        background: #e5e7eb;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .acc-bar {
+        height: 100%;
+        background: var(--green);
+        border-radius: 3px;
+      }
+
+      /* ---------- SCREEN: COMMODITY DASHBOARDS ---------- */
+      .comm-tabs {
+        display: flex;
+        gap: 3px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 6px;
+        margin-bottom: 16px;
+        overflow-x: auto;
+        box-shadow: var(--shadow-sm);
+      }
+      .comm-tab {
+        padding: 7px 14px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        white-space: nowrap;
+        color: var(--muted);
+      }
+      .comm-tab.active {
+        background: var(--navy);
+        color: #fff;
+      }
+      .comm-overview-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .sd-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .sd-table th {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: var(--muted);
+        text-align: left;
+        padding: 8px;
+        background: var(--light);
+        border-bottom: 1px solid var(--border);
+      }
+      .sd-table td {
+        padding: 8px;
+        border-bottom: 1px solid #f9fafb;
+        font-size: 13px;
+      }
+      .producer-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .producer-flag {
+        font-size: 18px;
+      }
+      .producer-bar {
+        height: 6px;
+        border-radius: 3px;
+        background: var(--accent);
+        margin-top: 4px;
+      }
+      .seasonal-bars {
+        display: flex;
+        align-items: flex-end;
+        gap: 3px;
+        height: 80px;
+      }
+      .s-bar {
+        flex: 1;
+        border-radius: 3px 3px 0 0;
+        min-height: 4px;
+      }
+      .s-bar.active {
+        background: var(--accent);
+      }
+      .s-bar.low {
+        background: #d1fae5;
+      }
+      .s-bar.high {
+        background: #fde8e8;
+      }
+      .s-bar.mid {
+        background: #e0e7ff;
+      }
+      .month-labels {
+        display: flex;
+        gap: 3px;
+        margin-top: 4px;
+      }
+      .m-label {
+        flex: 1;
+        font-size: 9px;
+        text-align: center;
+        color: var(--muted);
+      }
+
+      /* ---------- SCREEN: PRICE ALERTS ---------- */
+      .alerts-layout {
+        display: grid;
+        grid-template-columns: 380px 1fr;
+        gap: 16px;
+      }
+      .create-alert-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        box-shadow: var(--shadow-sm);
+      }
+      .alert-type-row {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 4px;
+      }
+      .alert-type-btn {
+        flex: 1;
+        padding: 8px;
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: center;
+        background: #fff;
+        transition: all 0.15s;
+      }
+      .alert-type-btn.active {
+        background: var(--navy);
+        color: #fff;
+        border-color: var(--navy);
+      }
+      .direction-row {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 16px;
+      }
+      .dir-btn {
+        flex: 1;
+        padding: 8px;
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        font-size: 12px;
+        cursor: pointer;
+        text-align: center;
+        background: #fff;
+      }
+      .dir-btn.active {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: #ebf4ff;
+      }
+      .notif-checks {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      .check-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+      }
+      .alerts-list {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        box-shadow: var(--shadow-sm);
+      }
+      .alerts-list-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+      .alert-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f3f4f6;
+        cursor: pointer;
+      }
+      .alert-row:last-child {
+        border-bottom: none;
+      }
+      .alert-row:hover {
+        background: #fafafa;
+        margin: 0 -8px;
+        padding: 10px 8px;
+        border-radius: 8px;
+      }
+      .al-commodity {
+        font-size: 13px;
+        font-weight: 600;
+        flex: 1.5;
+      }
+      .al-type {
+        font-size: 12px;
+        color: var(--muted);
+        flex: 1;
+      }
+      .al-threshold {
+        font-size: 13px;
+        font-weight: 600;
+        flex: 1;
+      }
+      .al-status {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 20px;
+      }
+      .st-active {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .st-paused {
+        background: #f3f4f6;
+        color: #6b7280;
+      }
+      .al-triggered {
+        font-size: 11px;
+        color: var(--muted);
+        flex: 1;
+        text-align: right;
+      }
+
+      /* ---------- SCREEN: API & EXPORT ---------- */
+      .api-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .api-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        box-shadow: var(--shadow-sm);
+      }
+      .api-key-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--light);
+        border-radius: 8px;
+        padding: 10px 14px;
+        margin-bottom: 10px;
+      }
+      .api-key-val {
+        font-family: "Courier New", monospace;
+        font-size: 12px;
+        flex: 1;
+        color: var(--muted);
+      }
+      .endpoint-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid #f9fafb;
+      }
+      .endpoint-row:last-child {
+        border-bottom: none;
+      }
+      .method-badge {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background: #d1fae5;
+        color: #065f46;
+        font-family: monospace;
+        min-width: 36px;
+        text-align: center;
+      }
+      .endpoint-path {
+        font-family: "Courier New", monospace;
+        font-size: 11px;
+        color: var(--navy);
+        flex: 1;
+      }
+      .endpoint-desc {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .usage-bar-wrap {
+        width: 100%;
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 4px;
+        margin: 8px 0;
+        overflow: hidden;
+      }
+      .usage-bar {
+        height: 100%;
+        border-radius: 4px;
+        background: var(--accent);
+      }
+      .connector-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+      }
+      .connector-chip {
+        background: var(--light);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+      }
+      .connector-chip:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .export-option {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #f9fafb;
+      }
+      .export-option:last-child {
+        border-bottom: none;
+      }
+
+      /* ---------- SCREEN: REPORTS ---------- */
+      .reports-filter-bar {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .report-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .report-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: var(--shadow-sm);
+      }
+      .report-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+      .report-type-badge {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 20px;
+        background: var(--tag-bg);
+        color: var(--tag);
+        margin-bottom: 10px;
+        display: inline-block;
+      }
+      .report-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--navy);
+        margin-bottom: 6px;
+      }
+      .report-desc {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .report-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 12px;
+        padding-top: 10px;
+        border-top: 1px solid #f3f4f6;
+      }
+      .report-freq {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .report-format {
+        display: flex;
+        gap: 4px;
+      }
+      .fmt-tag {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 4px;
+        background: #f3f4f6;
+        color: #374151;
+      }
+
+      /* BUTTONS */
+      .btn-sm {
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: #fff;
+        transition: all 0.15s;
+      }
+      .btn-sm:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .btn-navy {
+        background: var(--navy);
+        color: #fff;
+        border-color: var(--navy);
+      }
+      .btn-navy:hover {
+        background: var(--navy3);
+        border-color: var(--navy3);
+        color: #fff;
+      }
+      .btn-green {
+        background: var(--green);
+        color: #fff;
+        border-color: var(--green);
+      }
+      .btn-icon {
+        padding: 6px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: #fff;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+      }
+      .full-btn {
+        width: 100%;
+        background: var(--navy);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 11px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 8px;
+      }
+
+      .section-title {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+      .separator {
+        height: 1px;
+        background: var(--border);
+        margin: 12px 0;
+      }
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      input[type="number"],
+      select {
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 7px 10px;
+        font-size: 13px;
+        width: 100%;
+        outline: none;
+      }
+      input[type="text"]:focus,
+      input[type="email"]:focus,
+      input[type="number"]:focus,
+      select:focus {
+        border-color: var(--accent);
+      }
+    </style>
+
+    <div class="app">
+      <nav class="topnav">
+        <div class="logo">
+          <div class="logo-dot"></div>
+          Price Forecasting
+        </div>
+        <!-- <button class="nav-item" onclick="showScreen('login')">Login</button> -->
+        <button
+          class="nav-item active"
+          id="nav-dashboard"
+          onclick="showScreen('dashboard')"
+        >
+          Dashboard
+        </button>
+        <button
+          class="nav-item"
+          id="nav-charts"
+          onclick="showScreen('charts')"
+          style="display: none"
+        >
+          Price Charts
+        </button>
+        <button
+          class="nav-item"
+          id="nav-forecast"
+          onclick="showScreen('forecast')"
+        >
+          Forecasting
+        </button>
+        <button
+          class="nav-item"
+          id="nav-commodities"
+          onclick="showScreen('commodities')"
+        >
+          Commodities
+        </button>
+        <button class="nav-item" id="nav-alerts" onclick="showScreen('alerts')">
+          Alerts
+        </button>
+        <!-- <button class="nav-item" id="nav-api" onclick="showScreen('api')">
+      API & Export
+    </button> -->
+        <button
+          class="nav-item"
+          id="nav-reports"
+          onclick="showScreen('reports')"
+        >
+          Reports
+        </button>
+        <div class="nav-right">
+          <button
+            class="bell-btn"
+            style="
+              color: rgba(255, 255, 255, 0.7);
+              background: none;
+              border: none;
+              cursor: pointer;
+              padding: 6px;
+              font-size: 18px;
+              position: relative;
+            "
+          >
+            🔔<span class="badge"></span>
+          </button>
+          <div class="avatar">JD</div>
+        </div>
+      </nav>
+
+      <!-- ===== SCREEN: LOGIN ===== -->
+      <div class="screen" id="screen-login">
+        <div class="login-wrap">
+          <div class="login-card">
+            <div class="login-logo">
+              <div class="login-logo-dot"></div>
+              <span>Aranca Analytics</span>
+            </div>
+            <p class="login-sub">Sign in to your account to continue</p>
+            <div class="error-banner" id="err-banner">
+              ⚠️ Invalid credentials. 4 attempts remaining before lockout.
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email address</label>
+              <input
+                type="email"
+                class="form-input"
+                id="login-email"
+                placeholder="you@company.com"
+                autofocus
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <div style="position: relative">
+                <input
+                  type="password"
+                  class="form-input"
+                  id="login-pass"
+                  placeholder="••••••••"
+                  style="padding-right: 40px"
+                />
+                <button
+                  onclick="togglePass()"
+                  style="
+                    position: absolute;
+                    right: 12px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    color: var(--muted);
+                    font-size: 16px;
+                  "
+                >
+                  👁
+                </button>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="check-row">
+                <input type="checkbox" id="remember" /><label for="remember"
+                  >Remember me for 30 days</label
+                >
+              </div>
+              <span
+                class="forgot"
+                onclick="showToast('Password reset email sent!')"
+                >Forgot password?</span
+              >
+            </div>
+            <button class="btn-primary" onclick="doLogin()">Sign In</button>
+            <div class="divider">or</div>
+            <button
+              class="btn-secondary-lg"
+              onclick="showToast('Redirecting to SSO provider...')"
+            >
+              🔐 Sign In with SSO (SAML / OKTA / Azure AD)
+            </button>
+            <div class="mfa-section" id="mfa-section">
+              <p style="font-size: 13px; font-weight: 600; color: var(--navy)">
+                Two-factor authentication
+              </p>
+              <p style="font-size: 12px; color: var(--muted); margin-top: 4px">
+                Enter the 6-digit code from your authenticator app
+              </p>
+              <div class="otp-inputs">
+                <input
+                  class="otp-input"
+                  maxlength="1"
+                  type="text"
+                  oninput="otpNext(this, 0)"
+                />
+                <input
+                  class="otp-input"
+                  maxlength="1"
+                  type="text"
+                  oninput="otpNext(this, 1)"
+                />
+                <input
+                  class="otp-input"
+                  maxlength="1"
+                  type="text"
+                  oninput="otpNext(this, 2)"
+                />
+                <input
+                  class="otp-input"
+                  maxlength="1"
+                  type="text"
+                  oninput="otpNext(this, 3)"
+                />
+                <input
+                  class="otp-input"
+                  maxlength="1"
+                  type="text"
+                  oninput="otpNext(this, 4)"
+                />
+                <input
+                  class="otp-input"
+                  maxlength="1"
+                  type="text"
+                  oninput="otpNext(this, 5)"
+                />
+              </div>
+              <p class="mfa-note">
+                Time-limited TOTP code • Session expires after 60 min inactivity
+              </p>
+              <button
+                class="full-btn"
+                style="margin-top: 12px"
+                onclick="showScreen('dashboard')"
+              >
+                Verify & Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SCREEN: DASHBOARD ===== -->
+      <div class="screen active" id="screen-dashboard">
+        <div class="page-content">
+          <div class="page-header">
+            <div>
+              <div class="page-title">Good morning, James 👋</div>
+              <div
+                style="font-size: 13px; color: var(--muted); margin-top: 2px"
+              >
+                Wednesday, 7 May 2026 · 1,247 commodities tracked
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center">
+              <div class="date-range-strip">
+                <button class="dr-btn">1W</button
+                ><button class="dr-btn active">1M</button
+                ><button class="dr-btn">3M</button
+                ><button class="dr-btn">6M</button
+                ><button class="dr-btn">1Y</button
+                ><button class="dr-btn">Custom</button>
+              </div>
+              <button
+                class="btn-sm btn-navy"
+                onclick="showToast('Dashboard exported as PDF')"
+              >
+                ⬇ Export
+              </button>
+            </div>
+          </div>
+
+          <div class="kpi-strip">
+            <div class="kpi-card">
+              <div class="kpi-label">Commodities Tracked</div>
+              <div class="kpi-val">1,247</div>
+              <div class="kpi-sub kpi-up">▲ 12 added this week</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Active Price Alerts</div>
+              <div class="kpi-val">34</div>
+              <div class="kpi-sub kpi-dn">▲ 3 triggered today</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Avg Price Change</div>
+              <div class="kpi-val kpi-dn">+2.1%</div>
+              <div class="kpi-sub" style="color: var(--muted)">
+                vs last month
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Budget Variance</div>
+              <div class="kpi-val kpi-up">-£42k</div>
+              <div class="kpi-sub kpi-up">Below forecast ✓</div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid" style="margin-bottom: 16px">
+            <div class="widget">
+              <div class="widget-title">Price Movement Heatmap</div>
+              <div class="heatmap">
+                <div class="heat-cell h-up" onclick="showScreen('commodities')">
+                  Wheat<br />+3.2%
+                </div>
+                <div class="heat-cell h-dn" onclick="showScreen('commodities')">
+                  Palm Oil<br />-1.8%
+                </div>
+                <div class="heat-cell h-up" onclick="showScreen('commodities')">
+                  Cocoa<br />+5.4%
+                </div>
+                <div class="heat-cell h-dn" onclick="showScreen('commodities')">
+                  Sugar<br />-0.9%
+                </div>
+                <div class="heat-cell h-up" onclick="showScreen('commodities')">
+                  Alum.<br />+1.1%
+                </div>
+                <div
+                  class="heat-cell h-neu"
+                  onclick="showScreen('commodities')"
+                >
+                  Steel<br />0.0%
+                </div>
+                <div class="heat-cell h-up" onclick="showScreen('commodities')">
+                  Crude<br />+2.3%
+                </div>
+                <div class="heat-cell h-dn" onclick="showScreen('commodities')">
+                  Gas<br />-4.1%
+                </div>
+                <div class="heat-cell h-up" onclick="showScreen('commodities')">
+                  Copper<br />+0.8%
+                </div>
+                <div class="heat-cell h-dn" onclick="showScreen('commodities')">
+                  Lumber<br />-2.2%
+                </div>
+                <div
+                  class="heat-cell h-neu"
+                  onclick="showScreen('commodities')"
+                >
+                  Coffee<br />+0.2%
+                </div>
+                <div class="heat-cell h-up" onclick="showScreen('commodities')">
+                  Cotton<br />+1.7%
+                </div>
+              </div>
+            </div>
+            <div class="widget">
+              <div class="widget-title">Top Movers Today</div>
+              <div class="mover-row">
+                <span class="mover-name">Cocoa (ICCO)</span
+                ><svg class="mover-spark" viewBox="0 0 60 24">
+                  <polyline
+                    points="0,20 10,15 20,18 30,10 40,8 50,4 60,3"
+                    fill="none"
+                    stroke="#22a86b"
+                    stroke-width="2"
+                  /></svg
+                ><span class="mover-val kpi-up">+5.4%</span>
+              </div>
+              <div class="mover-row">
+                <span class="mover-name">Natural Gas</span
+                ><svg class="mover-spark" viewBox="0 0 60 24">
+                  <polyline
+                    points="0,4 10,6 20,8 30,12 40,16 50,18 60,21"
+                    fill="none"
+                    stroke="#e0433a"
+                    stroke-width="2"
+                  /></svg
+                ><span class="mover-val kpi-dn">-4.1%</span>
+              </div>
+              <div class="mover-row">
+                <span class="mover-name">Brent Crude</span
+                ><svg class="mover-spark" viewBox="0 0 60 24">
+                  <polyline
+                    points="0,18 10,16 20,14 30,12 40,10 50,8 60,6"
+                    fill="none"
+                    stroke="#22a86b"
+                    stroke-width="2"
+                  /></svg
+                ><span class="mover-val kpi-up">+2.3%</span>
+              </div>
+              <div class="mover-row">
+                <span class="mover-name">Wheat (UK Feed)</span
+                ><svg class="mover-spark" viewBox="0 0 60 24">
+                  <polyline
+                    points="0,16 10,14 20,16 30,11 40,12 50,9 60,8"
+                    fill="none"
+                    stroke="#22a86b"
+                    stroke-width="2"
+                  /></svg
+                ><span class="mover-val kpi-up">+3.2%</span>
+              </div>
+              <div class="mover-row">
+                <span class="mover-name">Lumber</span
+                ><svg class="mover-spark" viewBox="0 0 60 24">
+                  <polyline
+                    points="0,6 10,8 20,10 30,14 40,16 50,18 60,20"
+                    fill="none"
+                    stroke="#e0433a"
+                    stroke-width="2"
+                  /></svg
+                ><span class="mover-val kpi-dn">-2.2%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid" style="margin-bottom: 16px">
+            <div class="widget">
+              <div class="widget-title">My Watchlist</div>
+              <div class="watchlist-card">
+                <div class="wl-item">
+                  <div class="wl-name">Wheat (UK Feed)</div>
+                  <div class="wl-price">£248/t</div>
+                  <div class="kpi-up" style="font-size: 11px">▲ +3.2%</div>
+                </div>
+                <div class="wl-item">
+                  <div class="wl-name">Palm Oil</div>
+                  <div class="wl-price">$910/t</div>
+                  <div class="kpi-dn" style="font-size: 11px">▼ -1.8%</div>
+                </div>
+                <div class="wl-item">
+                  <div class="wl-name">Brent Crude</div>
+                  <div class="wl-price">$81.4/bbl</div>
+                  <div class="kpi-up" style="font-size: 11px">▲ +2.3%</div>
+                </div>
+                <div class="wl-item">
+                  <div class="wl-name">Aluminium LME</div>
+                  <div class="wl-price">$2,340/t</div>
+                  <div class="kpi-up" style="font-size: 11px">▲ +1.1%</div>
+                </div>
+              </div>
+            </div>
+            <div class="widget">
+              <div class="widget-title">Forecast Signals</div>
+              <div class="signal-list">
+                <div class="signal-row">
+                  <span style="font-size: 13px; font-weight: 500"
+                    >Wheat (UK Feed)</span
+                  ><span class="signal-badge sb-bull">Bullish ▲</span>
+                </div>
+                <div class="signal-row">
+                  <span style="font-size: 13px; font-weight: 500">Palm Oil</span
+                  ><span class="signal-badge sb-bear">Bearish ▼</span>
+                </div>
+                <div class="signal-row">
+                  <span style="font-size: 13px; font-weight: 500"
+                    >Brent Crude</span
+                  ><span class="signal-badge sb-bull">Bullish ▲</span>
+                </div>
+                <div class="signal-row">
+                  <span style="font-size: 13px; font-weight: 500"
+                    >Cocoa (ICCO)</span
+                  ><span class="signal-badge sb-bull">Bullish ▲</span>
+                </div>
+                <div class="signal-row">
+                  <span style="font-size: 13px; font-weight: 500"
+                    >Natural Gas</span
+                  ><span class="signal-badge sb-bear">Bearish ▼</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="widget">
+              <div class="widget-title">News & Market Intel</div>
+              <div class="news-feed">
+                <div class="news-item">
+                  <span class="news-tag">GRAINS</span>
+                  <div class="news-headline">
+                    Black Sea wheat corridor faces renewed disruption — prices
+                    rally
+                  </div>
+                  <div class="news-time">2 hours ago · Mintec Analyst Team</div>
+                </div>
+                <div class="news-item">
+                  <span class="news-tag">ENERGY</span>
+                  <div class="news-headline">
+                    OPEC+ cuts output by 500k bpd; crude futures jump 2.3% at
+                    open
+                  </div>
+                  <div class="news-time">4 hours ago · Reuters</div>
+                </div>
+                <div class="news-item">
+                  <span class="news-tag">METALS</span>
+                  <div class="news-headline">
+                    LME aluminium premiums ease on improved smelter output data
+                  </div>
+                  <div class="news-time">Yesterday · Bloomberg</div>
+                </div>
+                <div class="news-item">
+                  <span class="news-tag">SOFT COMMOD.</span>
+                  <div class="news-headline">
+                    Cocoa prices breach 3,500 — Ivory Coast mid-crop yields
+                    disappoint
+                  </div>
+                  <div class="news-time">Yesterday · Mintec</div>
+                </div>
+              </div>
+            </div>
+            <div class="widget">
+              <div class="widget-title">Budget Impact Tracker</div>
+              <div class="donut-wrap">
+                <svg width="120" height="120" viewBox="0 0 120 120">
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="42"
+                    fill="none"
+                    stroke="#e5e7eb"
+                    stroke-width="18"
+                  />
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="42"
+                    fill="none"
+                    stroke="#1A7FD4"
+                    stroke-width="18"
+                    stroke-dasharray="105 159"
+                    stroke-dashoffset="-39"
+                    stroke-linecap="round"
+                  />
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="42"
+                    fill="none"
+                    stroke="#22a86b"
+                    stroke-width="18"
+                    stroke-dasharray="53 211"
+                    stroke-dashoffset="-144"
+                    stroke-linecap="round"
+                  />
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="42"
+                    fill="none"
+                    stroke="#d97706"
+                    stroke-width="18"
+                    stroke-dasharray="40 224"
+                    stroke-dashoffset="-197"
+                    stroke-linecap="round"
+                  />
+                  <text
+                    x="60"
+                    y="57"
+                    text-anchor="middle"
+                    font-size="13"
+                    font-weight="700"
+                    fill="#0B1E3D"
+                  >
+                    -£42k
+                  </text>
+                  <text
+                    x="60"
+                    y="70"
+                    text-anchor="middle"
+                    font-size="9"
+                    fill="#6B7280"
+                  >
+                    budget variance
+                  </text>
+                </svg>
+                <div class="donut-legend">
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background: #1a7fd4"></div>
+                    <span style="font-size: 12px">Agri-Food 41%</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background: #22a86b"></div>
+                    <span style="font-size: 12px">Energy 21%</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background: #d97706"></div>
+                    <span style="font-size: 12px">Packaging 16%</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background: #e5e7eb"></div>
+                    <span style="font-size: 12px">Metals 22%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SCREEN: PRICE CHARTS ===== -->
+      <div class="screen" id="screen-charts">
+        <div class="page-content">
+          <div class="page-header">
+            <div class="page-title">Price Charts & Analytics</div>
+            <div style="display: flex; gap: 8px">
+              <button
+                class="btn-sm"
+                onclick="showToast('Chart shared — unique URL copied')"
+              >
+                🔗 Share
+              </button>
+              <button
+                class="btn-sm btn-navy"
+                onclick="showToast('Downloading CSV...')"
+              >
+                ⬇ CSV
+              </button>
+            </div>
+          </div>
+          <div class="chart-toolbar">
+            <div class="toolbar-group">
+              <span class="tb-label">Commodity</span>
+              <select class="tb-select" onchange="updateChartTitle(this.value)">
+                <option>Wheat (UK Feed)</option>
+                <option>Palm Oil</option>
+                <option>Brent Crude</option>
+                <option>Cocoa (ICCO)</option>
+                <option>Aluminium LME</option>
+                <option>Natural Gas</option>
+              </select>
+            </div>
+            <div class="toolbar-group">
+              <span class="tb-label">Range</span>
+              <button class="tb-btn" onclick="setActive(this)">1W</button>
+              <button class="tb-btn active" onclick="setActive(this)">
+                1M
+              </button>
+              <button class="tb-btn" onclick="setActive(this)">3M</button>
+              <button class="tb-btn" onclick="setActive(this)">1Y</button>
+              <button class="tb-btn" onclick="setActive(this)">5Y</button>
+            </div>
+            <div class="toolbar-group">
+              <span class="tb-label">Type</span>
+              <button class="tb-btn active" onclick="setActive(this)">
+                Line
+              </button>
+              <button class="tb-btn" onclick="setActive(this)">Bar</button>
+              <button class="tb-btn" onclick="setActive(this)">Candle</button>
+              <button class="tb-btn" onclick="setActive(this)">Area</button>
+            </div>
+            <div class="toolbar-group">
+              <select class="tb-select">
+                <option>GBP £</option>
+                <option>USD $</option>
+                <option>EUR €</option>
+                <option>JPY ¥</option>
+              </select>
+              <select class="tb-select">
+                <option>per tonne</option>
+                <option>per kg</option>
+                <option>per bushel</option>
+              </select>
+            </div>
+            <div class="toolbar-group">
+              <button class="tb-btn" onclick="toggleForecast()">
+                📈 Forecast Overlay
+              </button>
+              <button
+                class="tb-btn"
+                onclick="showToast('Comparison commodity added')"
+              >
+                + Compare
+              </button>
+            </div>
+          </div>
+
+          <div class="chart-area-wrap">
+            <div class="chart-container">
+              <div class="chart-header">
+                <div>
+                  <div class="chart-title" id="chart-commodity-title">
+                    Wheat (UK Feed)
+                  </div>
+                  <div style="font-size: 12px; color: var(--muted)">
+                    LIFFE · per tonne · GBP · Updated 2 min ago
+                  </div>
+                </div>
+                <div style="text-align: right">
+                  <div class="chart-price">£248.00</div>
+                  <div class="chart-change kpi-up">▲ +£7.70 (+3.2%) today</div>
+                </div>
+              </div>
+              <div class="chart-svg-wrap" style="position: relative">
+                <svg
+                  id="main-chart"
+                  width="100%"
+                  height="280"
+                  viewBox="0 0 620 280"
+                  preserveAspectRatio="none"
+                  style="cursor: crosshair"
+                  onmousemove="showChartTip(event)"
+                  onmouseleave="hideChartTip()"
+                >
+                  <defs>
+                    <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop
+                        offset="0%"
+                        stop-color="#1A7FD4"
+                        stop-opacity="0.18"
+                      />
+                      <stop
+                        offset="100%"
+                        stop-color="#1A7FD4"
+                        stop-opacity="0"
+                      />
+                    </linearGradient>
+                    <linearGradient
+                      id="forecastGrad"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="0%"
+                        stop-color="#22a86b"
+                        stop-opacity="0.12"
+                      />
+                      <stop
+                        offset="100%"
+                        stop-color="#22a86b"
+                        stop-opacity="0"
+                      />
+                    </linearGradient>
+                  </defs>
+                  <rect width="620" height="280" fill="#F8FAFD" />
+                  <line
+                    x1="0"
+                    y1="55"
+                    x2="620"
+                    y2="55"
+                    stroke="#e5e7eb"
+                    stroke-width="1"
+                    stroke-dasharray="4,4"
+                  />
+                  <line
+                    x1="0"
+                    y1="110"
+                    x2="620"
+                    y2="110"
+                    stroke="#e5e7eb"
+                    stroke-width="1"
+                    stroke-dasharray="4,4"
+                  />
+                  <line
+                    x1="0"
+                    y1="165"
+                    x2="620"
+                    y2="165"
+                    stroke="#e5e7eb"
+                    stroke-width="1"
+                    stroke-dasharray="4,4"
+                  />
+                  <line
+                    x1="0"
+                    y1="220"
+                    x2="620"
+                    y2="220"
+                    stroke="#e5e7eb"
+                    stroke-width="1"
+                    stroke-dasharray="4,4"
+                  />
+                  <text x="8" y="52" font-size="9" fill="#9CA3AF">£280</text>
+                  <text x="8" y="107" font-size="9" fill="#9CA3AF">£260</text>
+                  <text x="8" y="162" font-size="9" fill="#9CA3AF">£240</text>
+                  <text x="8" y="217" font-size="9" fill="#9CA3AF">£220</text>
+                  <path
+                    d="M30,210 L80,195 L130,185 L180,178 L230,190 L280,175 L330,160 L380,148 L430,155 L480,140 L530,128 L565,118"
+                    fill="url(#chartGrad)"
+                    stroke="none"
+                  />
+                  <path
+                    d="M30,210 L80,195 L130,185 L180,178 L230,190 L280,175 L330,160 L380,148 L430,155 L480,140 L530,128 L565,118 L565,280 L30,280 Z"
+                    fill="url(#chartGrad)"
+                  />
+                  <polyline
+                    id="chart-line"
+                    points="30,210 80,195 130,185 180,178 230,190 280,175 330,160 380,148 430,155 480,140 530,128 565,118"
+                    fill="none"
+                    stroke="#1A7FD4"
+                    stroke-width="2.5"
+                    stroke-linejoin="round"
+                  />
+                  <g id="forecast-overlay" style="display: none">
+                    <path
+                      d="M565,118 L590,112 L610,105"
+                      fill="none"
+                      stroke="#22a86b"
+                      stroke-width="2"
+                      stroke-dasharray="6,3"
+                    />
+                    <path
+                      d="M565,118 L590,108 L610,98 L610,112 L590,116 L565,124 Z"
+                      fill="url(#forecastGrad)"
+                    />
+                    <text
+                      x="570"
+                      y="102"
+                      font-size="9"
+                      fill="#22a86b"
+                      font-weight="600"
+                    >
+                      Forecast
+                    </text>
+                  </g>
+                  <circle cx="565" cy="118" r="4" fill="#1A7FD4" />
+                  <line
+                    id="chart-crosshair"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="280"
+                    stroke="#0B1E3D"
+                    stroke-width="1"
+                    stroke-dasharray="4,3"
+                    opacity="0"
+                  />
+                  <text x="100" y="265" font-size="9" fill="#9CA3AF">
+                    Apr 1
+                  </text>
+                  <text x="200" y="265" font-size="9" fill="#9CA3AF">
+                    Apr 10
+                  </text>
+                  <text x="300" y="265" font-size="9" fill="#9CA3AF">
+                    Apr 19
+                  </text>
+                  <text x="400" y="265" font-size="9" fill="#9CA3AF">
+                    Apr 28
+                  </text>
+                  <text x="500" y="265" font-size="9" fill="#9CA3AF">
+                    May 7
+                  </text>
+                </svg>
+                <div class="annotation-tip" id="chart-tip"></div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 16px;
+                  margin-top: 10px;
+                  flex-wrap: wrap;
+                "
+              >
+                <div style="display: flex; align-items: center; gap: 6px">
+                  <div
+                    style="
+                      width: 16px;
+                      height: 3px;
+                      background: #1a7fd4;
+                      border-radius: 2px;
+                    "
+                  ></div>
+                  <span style="font-size: 11px; color: var(--muted)"
+                    >Wheat (UK Feed)</span
+                  >
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px">
+                  <div
+                    style="
+                      width: 16px;
+                      height: 3px;
+                      background: #22a86b;
+                      border-radius: 2px;
+                      border-top: 2px dashed #22a86b;
+                      height: 0;
+                    "
+                  ></div>
+                  <span style="font-size: 11px; color: var(--muted)"
+                    >Forecast range</span
+                  >
+                </div>
+                <div style="margin-left: auto; display: flex; gap: 6px">
+                  <button class="btn-sm" onclick="showToast('Indicator added')">
+                    SMA
+                  </button>
+                  <button class="btn-sm" onclick="showToast('Indicator added')">
+                    EMA
+                  </button>
+                  <button class="btn-sm" onclick="showToast('RSI panel added')">
+                    RSI
+                  </button>
+                  <button
+                    class="btn-sm"
+                    onclick="showToast('MACD panel added')"
+                  >
+                    MACD
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="price-drivers-panel">
+              <div class="section-title">Price Drivers</div>
+              <div class="driver-row">
+                <span class="driver-name">Supply</span
+                ><span class="driver-status ds-tight">Tight</span
+                ><span class="driver-trend">▼ Tightening</span>
+              </div>
+              <div class="driver-row">
+                <span class="driver-name">Demand</span
+                ><span class="driver-status ds-high">High</span
+                ><span class="driver-trend">▲ Increasing</span>
+              </div>
+              <div class="driver-row">
+                <span class="driver-name">Currency (USD)</span
+                ><span class="driver-status ds-weak">Weak</span
+                ><span class="driver-trend">▼ Weakening</span>
+              </div>
+              <div class="driver-row">
+                <span class="driver-name">Energy Cost</span
+                ><span class="driver-status ds-elev">Elevated</span
+                ><span class="driver-trend">■ Stable</span>
+              </div>
+              <div class="driver-row">
+                <span class="driver-name">Interest Rates</span
+                ><span class="driver-status ds-rise">Rising</span
+                ><span class="driver-trend">▲ Increasing</span>
+              </div>
+              <div class="driver-row">
+                <span class="driver-name">Political Risk</span
+                ><span class="driver-status ds-mod">Moderate</span
+                ><span class="driver-trend">■ Stable</span>
+              </div>
+              <div class="driver-row">
+                <span class="driver-name">Weather</span
+                ><span class="driver-status ds-alert">Alert ⚠</span
+                ><span class="driver-trend">▲ Adverse</span>
+              </div>
+              <div class="separator"></div>
+              <div class="section-title">Source & Frequency</div>
+              <div
+                style="font-size: 12px; color: var(--muted); line-height: 1.8"
+              >
+                <div>📍 LIFFE / AHDB</div>
+                <div>🔄 Updated daily at 17:30 UTC</div>
+                <div>📊 17,000+ commodities in system</div>
+              </div>
+              <div class="separator"></div>
+              <button
+                class="full-btn"
+                onclick="showToast('Alert created for Wheat')"
+              >
+                🔔 Set Price Alert
+              </button>
+              <button
+                style="
+                  width: 100%;
+                  background: #fff;
+                  color: var(--navy);
+                  border: 1px solid var(--border);
+                  border-radius: 8px;
+                  padding: 10px;
+                  font-size: 13px;
+                  cursor: pointer;
+                  margin-top: 8px;
+                "
+                onclick="showScreen('forecast')"
+              >
+                📈 View Forecast →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SCREEN: FORECASTING ===== -->
+      <div class="screen" id="screen-forecast">
+        <div class="page-content">
+          <div class="page-header">
+            <div>
+              <div class="page-title">Forecasting & Hedging</div>
+              <div
+                style="font-size: 13px; color: var(--muted); margin-top: 2px"
+              >
+                600+ commodities covered · Updated weekly
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px">
+              <select class="tb-select" style="height: 34px; font-size: 13px">
+                <option>Wheat (UK Feed)</option>
+                <option>Palm Oil</option>
+                <option>Brent Crude</option>
+                <option>Cocoa (ICCO)</option>
+              </select>
+              <button
+                class="btn-sm btn-navy"
+                onclick="showToast('Forecast XLSX downloaded')"
+              >
+                ⬇ Download Forecast
+              </button>
+            </div>
+          </div>
+
+          <div class="forecast-layout">
+            <div class="forecast-main">
+              <div class="forecast-top">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    flex-wrap: wrap;
+                    gap: 12px;
+                    margin-bottom: 12px;
+                  "
+                >
+                  <div>
+                    <div
+                      style="
+                        font-size: 15px;
+                        font-weight: 700;
+                        color: var(--navy);
+                      "
+                    >
+                      Wheat (UK Feed) — 6-Month Forecast
+                    </div>
+                    <div
+                      style="
+                        font-size: 12px;
+                        color: var(--muted);
+                        margin-top: 2px;
+                      "
+                    >
+                      Algorithmic + Core Analyst Forecast · Last updated 5 May
+                      2026
+                    </div>
+                  </div>
+                  <div style="display: flex; gap: 6px">
+                    <div class="horizon-tabs">
+                      <button class="horizon-tab" onclick="setHorizon(this)">
+                        3M
+                      </button>
+                      <button
+                        class="horizon-tab active"
+                        onclick="setHorizon(this)"
+                      >
+                        6M
+                      </button>
+                      <button class="horizon-tab" onclick="setHorizon(this)">
+                        12M
+                      </button>
+                      <button class="horizon-tab" onclick="setHorizon(this)">
+                        24M
+                      </button>
+                    </div>
+                    <button
+                      class="btn-sm"
+                      onclick="toggleAlgoCore()"
+                      id="algo-toggle"
+                    >
+                      ⚡ Algorithmic
+                    </button>
+                    <button
+                      class="btn-sm"
+                      onclick="toggleAlgoCore()"
+                      id="core-toggle"
+                      style="
+                        background: var(--navy);
+                        color: #fff;
+                        border-color: var(--navy);
+                      "
+                    >
+                      📝 Core
+                    </button>
+                  </div>
+                </div>
+                <div class="hedging-badge hb-full">
+                  ✅ FULL — Confirmed buy signal: hedge full volume recommended
+                </div>
+                <svg
+                  width="100%"
+                  height="200"
+                  viewBox="0 0 600 200"
+                  style="margin-top: 8px; display: block"
+                  preserveAspectRatio="none"
+                >
+                  <defs>
+                    <linearGradient id="confGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop
+                        offset="0%"
+                        stop-color="#22a86b"
+                        stop-opacity="0.1"
+                      />
+                      <stop
+                        offset="100%"
+                        stop-color="#22a86b"
+                        stop-opacity="0"
+                      />
+                    </linearGradient>
+                  </defs>
+                  <rect width="600" height="200" fill="#F8FAFD" rx="8" />
+                  <line
+                    x1="0"
+                    y1="40"
+                    x2="600"
+                    y2="40"
+                    stroke="#e5e7eb"
+                    stroke-dasharray="4,4"
+                  />
+                  <line
+                    x1="0"
+                    y1="80"
+                    x2="600"
+                    y2="80"
+                    stroke="#e5e7eb"
+                    stroke-dasharray="4,4"
+                  />
+                  <line
+                    x1="0"
+                    y1="120"
+                    x2="600"
+                    y2="120"
+                    stroke="#e5e7eb"
+                    stroke-dasharray="4,4"
+                  />
+                  <line
+                    x1="0"
+                    y1="160"
+                    x2="600"
+                    y2="160"
+                    stroke="#e5e7eb"
+                    stroke-dasharray="4,4"
+                  />
+                  <text x="6" y="38" font-size="9" fill="#9CA3AF">£300</text>
+                  <text x="6" y="78" font-size="9" fill="#9CA3AF">£275</text>
+                  <text x="6" y="118" font-size="9" fill="#9CA3AF">£250</text>
+                  <text x="6" y="158" font-size="9" fill="#9CA3AF">£225</text>
+                  <line
+                    x1="300"
+                    y1="0"
+                    x2="300"
+                    y2="200"
+                    stroke="#9CA3AF"
+                    stroke-width="1.5"
+                    stroke-dasharray="6,3"
+                  />
+                  <text x="302" y="12" font-size="9" fill="#9CA3AF">Today</text>
+                  <polyline
+                    points="20,148 70,140 120,130 180,125 240,118 300,110"
+                    fill="none"
+                    stroke="#1A7FD4"
+                    stroke-width="2.5"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M300,110 L360,100 L420,88 L480,78 L540,68 L580,62"
+                    fill="none"
+                    stroke="#22a86b"
+                    stroke-width="2"
+                    stroke-dasharray="6,3"
+                  />
+                  <path
+                    d="M300,110 L360,94 L420,80 L480,68 L540,56 L580,50 L580,75 L540,83 L480,92 L420,100 L360,108 L300,118 Z"
+                    fill="url(#confGrad)"
+                  />
+                  <text
+                    x="310"
+                    y="98"
+                    font-size="10"
+                    fill="#22a86b"
+                    font-weight="600"
+                  >
+                    Forecast
+                  </text>
+                  <text x="42" y="190" font-size="9" fill="#9CA3AF">
+                    Nov 25
+                  </text>
+                  <text x="122" y="190" font-size="9" fill="#9CA3AF">
+                    Jan 26
+                  </text>
+                  <text x="202" y="190" font-size="9" fill="#9CA3AF">
+                    Mar 26
+                  </text>
+                  <text x="302" y="190" font-size="9" fill="#9CA3AF">
+                    May 26
+                  </text>
+                  <text x="390" y="190" font-size="9" fill="#9CA3AF">
+                    Jul 26
+                  </text>
+                  <text x="490" y="190" font-size="9" fill="#9CA3AF">
+                    Sep 26
+                  </text>
+                </svg>
+              </div>
+
+              <div class="widget">
+                <div class="widget-title">Price Scenario Table</div>
+                <table class="scenario-table">
+                  <tr>
+                    <th>Scenario</th>
+                    <th>3M Price</th>
+                    <th>6M Price</th>
+                    <th>12M Price</th>
+                    <th>Probability</th>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600">🐂 Bull</td>
+                    <td class="sc-bull">£285</td>
+                    <td class="sc-bull">£310</td>
+                    <td class="sc-bull">£340</td>
+                    <td>
+                      <span
+                        style="
+                          background: #d1fae5;
+                          color: #065f46;
+                          padding: 2px 10px;
+                          border-radius: 20px;
+                          font-size: 11px;
+                          font-weight: 700;
+                        "
+                        >20%</span
+                      >
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600">📊 Base</td>
+                    <td class="sc-base">£262</td>
+                    <td class="sc-base">£275</td>
+                    <td class="sc-base">£290</td>
+                    <td>
+                      <span
+                        style="
+                          background: #dbeafe;
+                          color: #1e40af;
+                          padding: 2px 10px;
+                          border-radius: 20px;
+                          font-size: 11px;
+                          font-weight: 700;
+                        "
+                        >55%</span
+                      >
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600">🐻 Bear</td>
+                    <td class="sc-bear">£238</td>
+                    <td class="sc-bear">£225</td>
+                    <td class="sc-bear">£210</td>
+                    <td>
+                      <span
+                        style="
+                          background: #fee2e2;
+                          color: #991b1b;
+                          padding: 2px 10px;
+                          border-radius: 20px;
+                          font-size: 11px;
+                          font-weight: 700;
+                        "
+                        >25%</span
+                      >
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <div class="forecast-sidebar">
+              <div class="sidebar-card">
+                <div class="section-title">Hedging Signal Definitions</div>
+                <div style="display: flex; flex-direction: column; gap: 8px">
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 10px;
+                      padding: 8px;
+                      border-radius: 8px;
+                      background: #fee2e2;
+                    "
+                  >
+                    <span
+                      style="
+                        font-weight: 700;
+                        font-size: 11px;
+                        color: #991b1b;
+                        min-width: 56px;
+                      "
+                      >AVOID</span
+                    ><span style="font-size: 12px; color: #7f1d1d"
+                      >Price in confirmed downtrend</span
+                    >
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 10px;
+                      padding: 8px;
+                      border-radius: 8px;
+                      background: #fef3c7;
+                    "
+                  >
+                    <span
+                      style="
+                        font-weight: 700;
+                        font-size: 11px;
+                        color: #92400e;
+                        min-width: 56px;
+                      "
+                      >PLAN</span
+                    ><span style="font-size: 12px; color: #78350f"
+                      >Uptrend anticipated — prepare</span
+                    >
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 10px;
+                      padding: 8px;
+                      border-radius: 8px;
+                      background: #fef9c3;
+                    "
+                  >
+                    <span
+                      style="
+                        font-weight: 700;
+                        font-size: 11px;
+                        color: #713f12;
+                        min-width: 56px;
+                      "
+                      >PARTIAL</span
+                    ><span style="font-size: 12px; color: #713f12"
+                      >Mixed signals — hedge partial</span
+                    >
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 10px;
+                      padding: 8px;
+                      border-radius: 8px;
+                      background: #d1fae5;
+                    "
+                  >
+                    <span
+                      style="
+                        font-weight: 700;
+                        font-size: 11px;
+                        color: #065f46;
+                        min-width: 56px;
+                      "
+                      >FULL ✓</span
+                    ><span style="font-size: 12px; color: #064e3b"
+                      >Confirmed buy — hedge fully</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="sidebar-card">
+                <div class="section-title">Analyst Commentary</div>
+                <div class="analyst-note">
+                  Black Sea supply disruption continues to exert upward
+                  pressure. USDA data points to tighter global S&D balance
+                  through Q3. Recommend maintaining full hedge position. Review
+                  mid-June on harvest outcome.
+                </div>
+                <div
+                  style="font-size: 11px; color: var(--muted); margin-top: 10px"
+                >
+                  Last updated: 5 May 2026 · Sarah T., Senior Analyst
+                </div>
+              </div>
+              <div class="sidebar-card">
+                <div class="section-title">Macro Indicators</div>
+                <div class="macro-grid">
+                  <div class="macro-item">
+                    <div class="macro-label">GDP (UK)</div>
+                    <div class="macro-val">+1.4%</div>
+                    <div style="font-size: 10px; color: var(--green)">
+                      ▲ Growing
+                    </div>
+                  </div>
+                  <div class="macro-item">
+                    <div class="macro-label">CPI (UK)</div>
+                    <div class="macro-val">3.2%</div>
+                    <div style="font-size: 10px; color: var(--red)">
+                      ▲ Elevated
+                    </div>
+                  </div>
+                  <div class="macro-item">
+                    <div class="macro-label">PMI Mfg.</div>
+                    <div class="macro-val">51.3</div>
+                    <div style="font-size: 10px; color: var(--green)">
+                      ▲ Expanding
+                    </div>
+                  </div>
+                  <div class="macro-item">
+                    <div class="macro-label">USD/GBP</div>
+                    <div class="macro-val">1.274</div>
+                    <div style="font-size: 10px; color: var(--red)">
+                      ▼ Weakening
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="sidebar-card">
+                <div class="section-title">Forecast Accuracy Scorecard</div>
+                <div class="accuracy-row">
+                  <span style="font-size: 12px">3M MAPE</span>
+                  <div class="acc-bar-wrap">
+                    <div class="acc-bar" style="width: 82%"></div>
+                  </div>
+                  <span
+                    style="
+                      font-size: 12px;
+                      font-weight: 600;
+                      color: var(--green);
+                    "
+                    >82%</span
+                  >
+                </div>
+                <div class="accuracy-row">
+                  <span style="font-size: 12px">6M MAPE</span>
+                  <div class="acc-bar-wrap">
+                    <div class="acc-bar" style="width: 74%"></div>
+                  </div>
+                  <span
+                    style="
+                      font-size: 12px;
+                      font-weight: 600;
+                      color: var(--green);
+                    "
+                    >74%</span
+                  >
+                </div>
+                <div class="accuracy-row">
+                  <span style="font-size: 12px">Directional</span>
+                  <div class="acc-bar-wrap">
+                    <div class="acc-bar" style="width: 88%"></div>
+                  </div>
+                  <span
+                    style="
+                      font-size: 12px;
+                      font-weight: 600;
+                      color: var(--green);
+                    "
+                    >88%</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SCREEN: COMMODITY DASHBOARDS ===== -->
+      <div class="screen" id="screen-commodities">
+        <div class="page-content">
+          <div class="page-header">
+            <div>
+              <div class="page-title">Commodity Intelligence</div>
+              <div
+                style="font-size: 13px; color: var(--muted); margin-top: 2px"
+              >
+                17,000+ commodities · Real-time pricing, forecasts & analytics
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center">
+              <select class="tb-select" style="height: 34px; font-size: 13px">
+                <option>Wheat (UK Feed) · Agri-Food › Grains</option>
+                <option>Palm Oil · Agri-Food › Oilseeds</option>
+                <option>Brent Crude · Energy</option>
+              </select>
+              <button
+                class="btn-sm btn-navy"
+                onclick="showToast('Forecast XLSX downloaded')"
+              >
+                ⬇ Download
+              </button>
+            </div>
+          </div>
+          <div class="comm-tabs">
+            <button
+              class="comm-tab active"
+              onclick="setCommTab(this, 'comm-overview')"
+            >
+              Overview
+            </button>
+            <button class="comm-tab" onclick="setCommTab(this, 'comm-price')">
+              Price History
+            </button>
+            <button
+              class="comm-tab"
+              onclick="setCommTab(this, 'comm-forecast')"
+            >
+              Forecast
+            </button>
+            <button class="comm-tab" onclick="setCommTab(this, 'comm-sd')">
+              Supply & Demand
+            </button>
+            <button class="comm-tab" onclick="setCommTab(this, 'comm-drivers')">
+              Price Drivers
+            </button>
+            <button class="comm-tab" onclick="setCommTab(this, 'comm-news')">
+              News & Events
+            </button>
+            <button class="comm-tab" onclick="setCommTab(this, 'comm-facts')">
+              Key Facts
+            </button>
+            <button
+              class="comm-tab"
+              onclick="setCommTab(this, 'comm-seasonal')"
+            >
+              Seasonal Patterns
+            </button>
+          </div>
+
+          <div id="comm-overview">
+            <div class="comm-overview-grid">
+              <div class="kpi-card">
+                <div class="kpi-label">Current Price</div>
+                <div class="kpi-val">£248/t</div>
+                <div class="kpi-sub kpi-up">▲ +3.2% today</div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">52-Week High</div>
+                <div class="kpi-val">£296/t</div>
+                <div class="kpi-sub" style="color: var(--muted)">
+                  12 Aug 2025
+                </div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">52-Week Low</div>
+                <div class="kpi-val">£218/t</div>
+                <div class="kpi-sub" style="color: var(--muted)">
+                  3 Jan 2026
+                </div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Analyst Rating</div>
+                <div class="kpi-val" style="font-size: 18px">Bullish ▲</div>
+                <div class="kpi-sub kpi-up">Updated 5 May</div>
+              </div>
+            </div>
+            <div class="dashboard-grid">
+              <div class="widget">
+                <div class="widget-title">Trend Summary</div>
+                <div
+                  style="font-size: 13px; line-height: 1.8; color: var(--text)"
+                >
+                  Short-term supply tightness from Black Sea disruption is
+                  supporting prices above the £240 support level. Medium-term
+                  outlook remains bullish contingent on Northern Hemisphere
+                  harvest outcomes. Basis spreads have widened vs. CBOT.
+                </div>
+                <div
+                  style="
+                    margin-top: 12px;
+                    display: flex;
+                    gap: 8px;
+                    flex-wrap: wrap;
+                  "
+                >
+                  <span
+                    style="
+                      background: #d1fae5;
+                      color: #065f46;
+                      font-size: 11px;
+                      font-weight: 700;
+                      padding: 3px 10px;
+                      border-radius: 20px;
+                    "
+                    >1M Trend: ▲ +8.4%</span
+                  >
+                  <span
+                    style="
+                      background: #fef3c7;
+                      color: #92400e;
+                      font-size: 11px;
+                      font-weight: 700;
+                      padding: 3px 10px;
+                      border-radius: 20px;
+                    "
+                    >3M Trend: ▲ +12.1%</span
+                  >
+                  <span
+                    style="
+                      background: #fee2e2;
+                      color: #991b1b;
+                      font-size: 11px;
+                      font-weight: 700;
+                      padding: 3px 10px;
+                      border-radius: 20px;
+                    "
+                    >1Y Trend: ▼ -4.7%</span
+                  >
+                </div>
+              </div>
+              <div class="widget">
+                <div class="widget-title">Category Coverage</div>
+                <div style="display: flex; flex-direction: column; gap: 6px">
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                      font-size: 12px;
+                      padding: 5px 0;
+                      border-bottom: 1px solid #f3f4f6;
+                    "
+                  >
+                    <span style="font-weight: 600">Agri-Food</span
+                    ><span style="color: var(--muted)"
+                      >Grains · Oilseeds · Dairy · Meat · Seafood · Sugar</span
+                    ><span style="font-weight: 700; color: var(--accent)"
+                      >8,000+</span
+                    >
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                      font-size: 12px;
+                      padding: 5px 0;
+                      border-bottom: 1px solid #f3f4f6;
+                    "
+                  >
+                    <span style="font-weight: 600">Packaging</span
+                    ><span style="color: var(--muted)"
+                      >Plastics · Paper · Glass · Cans</span
+                    ><span style="font-weight: 700; color: var(--accent)"
+                      >2,500+</span
+                    >
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                      font-size: 12px;
+                      padding: 5px 0;
+                      border-bottom: 1px solid #f3f4f6;
+                    "
+                  >
+                    <span style="font-weight: 600">Energy</span
+                    ><span style="color: var(--muted)"
+                      >Crude · Gas · Biofuel · Coal</span
+                    ><span style="font-weight: 700; color: var(--accent)"
+                      >800+</span
+                    >
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                      font-size: 12px;
+                      padding: 5px 0;
+                      border-bottom: 1px solid #f3f4f6;
+                    "
+                  >
+                    <span style="font-weight: 600">Metals</span
+                    ><span style="color: var(--muted)"
+                      >Aluminium · Steel · Copper</span
+                    ><span style="font-weight: 700; color: var(--accent)"
+                      >500+</span
+                    >
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                      font-size: 12px;
+                      padding: 5px 0;
+                    "
+                  >
+                    <span style="font-weight: 600">Soft Commod.</span
+                    ><span style="color: var(--muted)"
+                      >Coffee · Cocoa · Cotton · Rubber</span
+                    ><span style="font-weight: 700; color: var(--accent)"
+                      >300+</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="comm-price" style="display: none">
+            <!-- Chart Toolbar -->
+            <div class="chart-toolbar" style="margin-bottom: 16px">
+              <div class="toolbar-group">
+                <span class="tb-label">Range</span>
+                <button class="tb-btn" onclick="setActive(this)">1W</button>
+                <button class="tb-btn active" onclick="setActive(this)">
+                  1M
+                </button>
+                <button class="tb-btn" onclick="setActive(this)">3M</button>
+                <button class="tb-btn" onclick="setActive(this)">1Y</button>
+                <button class="tb-btn" onclick="setActive(this)">5Y</button>
+              </div>
+              <div class="toolbar-group">
+                <span class="tb-label">Type</span>
+                <button class="tb-btn active" onclick="setActive(this)">
+                  Line
+                </button>
+                <button class="tb-btn" onclick="setActive(this)">Bar</button>
+                <button class="tb-btn" onclick="setActive(this)">Candle</button>
+                <button class="tb-btn" onclick="setActive(this)">Area</button>
+              </div>
+              <div class="toolbar-group">
+                <select class="tb-select">
+                  <option>GBP £</option>
+                  <option>USD $</option>
+                  <option>EUR €</option>
+                </select>
+                <select class="tb-select">
+                  <option>per tonne</option>
+                  <option>per kg</option>
+                  <option>per bushel</option>
+                </select>
+              </div>
+              <div class="toolbar-group" style="margin-left: auto">
+                <button
+                  class="btn-sm"
+                  onclick="showToast('Chart shared — unique URL copied')"
+                >
+                  🔗 Share
+                </button>
+                <button
+                  class="btn-sm btn-navy"
+                  onclick="showToast('Downloading CSV...')"
+                >
+                  ⬇ CSV
+                </button>
+              </div>
+            </div>
+            <!-- Chart + Drivers Layout -->
+            <div class="chart-area-wrap">
+              <div class="chart-container">
+                <div class="chart-header">
+                  <div>
+                    <div class="chart-title">Wheat (UK Feed)</div>
+                    <div style="font-size: 12px; color: var(--muted)">
+                      LIFFE · per tonne · GBP · Updated 2 min ago
+                    </div>
+                  </div>
+                  <div style="text-align: right">
+                    <div class="chart-price">£248.00</div>
+                    <div class="chart-change kpi-up">
+                      ▲ +£7.70 (+3.2%) today
+                    </div>
+                  </div>
+                </div>
+                <div class="chart-svg-wrap" style="position: relative">
+                  <svg
+                    width="100%"
+                    height="280"
+                    viewBox="0 0 620 280"
+                    preserveAspectRatio="none"
+                    style="cursor: crosshair"
+                  >
+                    <defs>
+                      <linearGradient
+                        id="chartGrad2"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="0%"
+                          stop-color="#1A7FD4"
+                          stop-opacity="0.18"
+                        />
+                        <stop
+                          offset="100%"
+                          stop-color="#1A7FD4"
+                          stop-opacity="0"
+                        />
+                      </linearGradient>
+                    </defs>
+                    <rect width="620" height="280" fill="#F8FAFD" />
+                    <line
+                      x1="0"
+                      y1="55"
+                      x2="620"
+                      y2="55"
+                      stroke="#e5e7eb"
+                      stroke-width="1"
+                      stroke-dasharray="4,4"
+                    />
+                    <line
+                      x1="0"
+                      y1="110"
+                      x2="620"
+                      y2="110"
+                      stroke="#e5e7eb"
+                      stroke-width="1"
+                      stroke-dasharray="4,4"
+                    />
+                    <line
+                      x1="0"
+                      y1="165"
+                      x2="620"
+                      y2="165"
+                      stroke="#e5e7eb"
+                      stroke-width="1"
+                      stroke-dasharray="4,4"
+                    />
+                    <line
+                      x1="0"
+                      y1="220"
+                      x2="620"
+                      y2="220"
+                      stroke="#e5e7eb"
+                      stroke-width="1"
+                      stroke-dasharray="4,4"
+                    />
+                    <text x="8" y="52" font-size="9" fill="#9CA3AF">£280</text>
+                    <text x="8" y="107" font-size="9" fill="#9CA3AF">£260</text>
+                    <text x="8" y="162" font-size="9" fill="#9CA3AF">£240</text>
+                    <text x="8" y="217" font-size="9" fill="#9CA3AF">£220</text>
+                    <path
+                      d="M30,210 L80,195 L130,185 L180,178 L230,190 L280,175 L330,160 L380,148 L430,155 L480,140 L530,128 L565,118 L565,280 L30,280 Z"
+                      fill="url(#chartGrad2)"
+                    />
+                    <polyline
+                      points="30,210 80,195 130,185 180,178 230,190 280,175 330,160 380,148 430,155 480,140 530,128 565,118"
+                      fill="none"
+                      stroke="#1A7FD4"
+                      stroke-width="2.5"
+                      stroke-linejoin="round"
+                    />
+                    <circle cx="565" cy="118" r="4" fill="#1A7FD4" />
+                    <text x="100" y="265" font-size="9" fill="#9CA3AF">
+                      Apr 1
+                    </text>
+                    <text x="200" y="265" font-size="9" fill="#9CA3AF">
+                      Apr 10
+                    </text>
+                    <text x="300" y="265" font-size="9" fill="#9CA3AF">
+                      Apr 19
+                    </text>
+                    <text x="400" y="265" font-size="9" fill="#9CA3AF">
+                      Apr 28
+                    </text>
+                    <text x="500" y="265" font-size="9" fill="#9CA3AF">
+                      May 7
+                    </text>
+                  </svg>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 16px;
+                    margin-top: 10px;
+                    flex-wrap: wrap;
+                  "
+                >
+                  <div style="display: flex; align-items: center; gap: 6px">
+                    <div
+                      style="
+                        width: 16px;
+                        height: 3px;
+                        background: #1a7fd4;
+                        border-radius: 2px;
+                      "
+                    ></div>
+                    <span style="font-size: 11px; color: var(--muted)"
+                      >Wheat (UK Feed)</span
+                    >
+                  </div>
+                  <div style="margin-left: auto; display: flex; gap: 6px">
+                    <button
+                      class="btn-sm"
+                      onclick="showToast('Indicator added')"
+                    >
+                      SMA
+                    </button>
+                    <button
+                      class="btn-sm"
+                      onclick="showToast('Indicator added')"
+                    >
+                      EMA
+                    </button>
+                    <button
+                      class="btn-sm"
+                      onclick="showToast('RSI panel added')"
+                    >
+                      RSI
+                    </button>
+                    <button
+                      class="btn-sm"
+                      onclick="showToast('MACD panel added')"
+                    >
+                      MACD
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="price-drivers-panel">
+                <div class="section-title">Price Drivers</div>
+                <div class="driver-row">
+                  <span class="driver-name">Supply</span
+                  ><span class="driver-status ds-tight">Tight</span
+                  ><span class="driver-trend">▼ Tightening</span>
+                </div>
+                <div class="driver-row">
+                  <span class="driver-name">Demand</span
+                  ><span class="driver-status ds-high">High</span
+                  ><span class="driver-trend">▲ Increasing</span>
+                </div>
+                <div class="driver-row">
+                  <span class="driver-name">Currency (USD)</span
+                  ><span class="driver-status ds-weak">Weak</span
+                  ><span class="driver-trend">▼ Weakening</span>
+                </div>
+                <div class="driver-row">
+                  <span class="driver-name">Energy Cost</span
+                  ><span class="driver-status ds-elev">Elevated</span
+                  ><span class="driver-trend">■ Stable</span>
+                </div>
+                <div class="driver-row">
+                  <span class="driver-name">Interest Rates</span
+                  ><span class="driver-status ds-rise">Rising</span
+                  ><span class="driver-trend">▲ Increasing</span>
+                </div>
+                <div class="driver-row">
+                  <span class="driver-name">Weather</span
+                  ><span class="driver-status ds-alert">Alert ⚠</span
+                  ><span class="driver-trend">▲ Adverse</span>
+                </div>
+                <div class="separator"></div>
+                <div class="section-title">Source & Frequency</div>
+                <div
+                  style="font-size: 12px; color: var(--muted); line-height: 1.8"
+                >
+                  <div>📍 LIFFE / AHDB</div>
+                  <div>🔄 Updated daily at 17:30 UTC</div>
+                  <div>📊 17,000+ commodities in system</div>
+                </div>
+                <div class="separator"></div>
+                <button
+                  class="full-btn"
+                  onclick="showToast('Alert created for Wheat')"
+                >
+                  🔔 Set Price Alert
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="comm-forecast" style="display: none">
+            <div class="widget">
+              <div class="widget-title">6-Month Forecast + Hedging Signal</div>
+              <div class="hedging-badge hb-full" style="margin-bottom: 12px">
+                ✅ FULL hedge recommended
+              </div>
+              <svg
+                width="100%"
+                height="180"
+                viewBox="0 0 600 180"
+                preserveAspectRatio="none"
+                style="background: #f8fafc; border-radius: 8px"
+              >
+                <polyline
+                  points="20,140 120,120 250,105 300,95"
+                  fill="none"
+                  stroke="#1A7FD4"
+                  stroke-width="2.5"
+                />
+                <polyline
+                  points="300,95 400,80 500,65 580,55"
+                  fill="none"
+                  stroke="#16a34a"
+                  stroke-width="2"
+                  stroke-dasharray="6,3"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <div id="comm-sd" style="display: none">
+            <div class="widget">
+              <div class="widget-title">Global Supply & Demand Balance</div>
+              <table class="sd-table">
+                <tr>
+                  <th>Region</th>
+                  <th>Production (Mt)</th>
+                  <th>Consumption (Mt)</th>
+                  <th>Net Balance</th>
+                  <th>YoY Change</th>
+                </tr>
+                <tr>
+                  <td>EU-27</td>
+                  <td>128.4</td>
+                  <td>119.2</td>
+                  <td style="color: var(--green); font-weight: 700">
+                    +9.2 Surplus
+                  </td>
+                  <td>-2.1%</td>
+                </tr>
+                <tr>
+                  <td>North America</td>
+                  <td>87.6</td>
+                  <td>83.1</td>
+                  <td style="color: var(--green); font-weight: 700">
+                    +4.5 Surplus
+                  </td>
+                  <td>+1.3%</td>
+                </tr>
+                <tr>
+                  <td>Black Sea</td>
+                  <td>62.3</td>
+                  <td>44.1</td>
+                  <td style="color: var(--green); font-weight: 700">
+                    +18.2 Surplus
+                  </td>
+                  <td style="color: var(--red)">-8.4%</td>
+                </tr>
+                <tr>
+                  <td>Asia-Pacific</td>
+                  <td>45.1</td>
+                  <td>68.7</td>
+                  <td style="color: var(--red); font-weight: 700">
+                    -23.6 Deficit
+                  </td>
+                  <td>-1.7%</td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 700">Global</td>
+                  <td style="font-weight: 700">323.4</td>
+                  <td style="font-weight: 700">315.1</td>
+                  <td style="color: var(--green); font-weight: 700">
+                    +8.3 Surplus
+                  </td>
+                  <td style="color: var(--red)">-3.2%</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <div id="comm-drivers" style="display: none">
+            <div class="widget">
+              <div class="widget-title">Price Driver Analysis</div>
+              <div
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px"
+              >
+                <div>
+                  <div class="driver-row">
+                    <span class="driver-name">Supply</span
+                    ><span class="driver-status ds-tight">Tight</span
+                    ><span class="driver-trend">▼ Tightening</span>
+                  </div>
+                  <div class="driver-row">
+                    <span class="driver-name">Demand</span
+                    ><span class="driver-status ds-high">High</span
+                    ><span class="driver-trend">▲ Increasing</span>
+                  </div>
+                  <div class="driver-row">
+                    <span class="driver-name">Weather</span
+                    ><span class="driver-status ds-alert">Alert ⚠</span
+                    ><span class="driver-trend">▲ Adverse</span>
+                  </div>
+                </div>
+                <div>
+                  <div class="driver-row">
+                    <span class="driver-name">Political Risk</span
+                    ><span class="driver-status ds-mod">Moderate</span
+                    ><span class="driver-trend">■ Stable</span>
+                  </div>
+                  <div class="driver-row">
+                    <span class="driver-name">Currency USD</span
+                    ><span class="driver-status ds-weak">Weak</span
+                    ><span class="driver-trend">▼ Weakening</span>
+                  </div>
+                  <div class="driver-row">
+                    <span class="driver-name">Energy Cost</span
+                    ><span class="driver-status ds-elev">Elevated</span
+                    ><span class="driver-trend">■ Stable</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="comm-news" style="display: none">
+            <div class="widget">
+              <div class="widget-title">News & Key Event Calendar</div>
+              <div class="news-feed">
+                <div class="news-item">
+                  <span class="news-tag">BREAKING</span>
+                  <div class="news-headline">
+                    USDA WASDE report: global wheat ending stocks revised down
+                    3.2Mt vs April estimate
+                  </div>
+                  <div class="news-time">Today 14:30 UTC · USDA</div>
+                </div>
+                <div class="news-item">
+                  <span class="news-tag">HARVEST</span>
+                  <div class="news-headline">
+                    UK winter wheat crop ratings: 68% good/excellent — slightly
+                    below 5-year average
+                  </div>
+                  <div class="news-time">6 May 2026 · AHDB</div>
+                </div>
+                <div class="news-item">
+                  <span class="news-tag">TRADE</span>
+                  <div class="news-headline">
+                    Egypt GASC tender: purchases 240kt at $238/t FOB — firm
+                    market tone
+                  </div>
+                  <div class="news-time">5 May 2026 · GASC</div>
+                </div>
+              </div>
+              <div class="separator"></div>
+              <div
+                style="
+                  font-size: 12px;
+                  font-weight: 600;
+                  color: var(--muted);
+                  margin-bottom: 8px;
+                "
+              >
+                UPCOMING KEY DATES
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    font-size: 12px;
+                    padding: 6px;
+                    background: var(--light);
+                    border-radius: 6px;
+                  "
+                >
+                  <span
+                    style="
+                      background: #dbeafe;
+                      color: #1e40af;
+                      padding: 2px 8px;
+                      border-radius: 4px;
+                      font-weight: 700;
+                      font-size: 10px;
+                    "
+                    >May 12</span
+                  ><span>USDA WASDE Monthly Report</span>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    font-size: 12px;
+                    padding: 6px;
+                    background: var(--light);
+                    border-radius: 6px;
+                  "
+                >
+                  <span
+                    style="
+                      background: #dbeafe;
+                      color: #1e40af;
+                      padding: 2px 8px;
+                      border-radius: 4px;
+                      font-weight: 700;
+                      font-size: 10px;
+                    "
+                    >Jun 1</span
+                  ><span>EU Grain Balance Sheet Update (DG Agri)</span>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    font-size: 12px;
+                    padding: 6px;
+                    background: var(--light);
+                    border-radius: 6px;
+                  "
+                >
+                  <span
+                    style="
+                      background: #dbeafe;
+                      color: #1e40af;
+                      padding: 2px 8px;
+                      border-radius: 4px;
+                      font-weight: 700;
+                      font-size: 10px;
+                    "
+                    >Jul 15</span
+                  ><span>UK Winter Wheat Harvest begins (est.)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="comm-facts" style="display: none">
+            <div class="dashboard-grid">
+              <div class="widget">
+                <div class="widget-title">Top Producers</div>
+                <div class="producer-row">
+                  <span class="producer-flag">🇨🇳</span>
+                  <div style="flex: 1">
+                    <div style="font-size: 13px; font-weight: 600">China</div>
+                    <div class="producer-bar" style="width: 92%"></div>
+                  </div>
+                  <span style="font-size: 13px; font-weight: 700"
+                    >136.9 Mt</span
+                  >
+                </div>
+                <div class="producer-row">
+                  <span class="producer-flag">🇮🇳</span>
+                  <div style="flex: 1">
+                    <div style="font-size: 13px; font-weight: 600">India</div>
+                    <div class="producer-bar" style="width: 75%"></div>
+                  </div>
+                  <span style="font-size: 13px; font-weight: 700"
+                    >107.6 Mt</span
+                  >
+                </div>
+                <div class="producer-row">
+                  <span class="producer-flag">🇷🇺</span>
+                  <div style="flex: 1">
+                    <div style="font-size: 13px; font-weight: 600">Russia</div>
+                    <div class="producer-bar" style="width: 62%"></div>
+                  </div>
+                  <span style="font-size: 13px; font-weight: 700">91.5 Mt</span>
+                </div>
+                <div class="producer-row">
+                  <span class="producer-flag">🇺🇸</span>
+                  <div style="flex: 1">
+                    <div style="font-size: 13px; font-weight: 600">USA</div>
+                    <div class="producer-bar" style="width: 53%"></div>
+                  </div>
+                  <span style="font-size: 13px; font-weight: 700">52.3 Mt</span>
+                </div>
+                <div class="producer-row">
+                  <span class="producer-flag">🇦🇺</span>
+                  <div style="flex: 1">
+                    <div style="font-size: 13px; font-weight: 600">
+                      Australia
+                    </div>
+                    <div class="producer-bar" style="width: 34%"></div>
+                  </div>
+                  <span style="font-size: 13px; font-weight: 700">28.1 Mt</span>
+                </div>
+              </div>
+              <div class="widget">
+                <div class="widget-title">Key Facts</div>
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 8px;
+                    font-size: 12px;
+                  "
+                >
+                  <div
+                    style="
+                      background: var(--light);
+                      padding: 10px;
+                      border-radius: 8px;
+                    "
+                  >
+                    <div
+                      style="
+                        color: var(--muted);
+                        font-size: 10px;
+                        text-transform: uppercase;
+                        font-weight: 700;
+                      "
+                    >
+                      Global Production
+                    </div>
+                    <div
+                      style="
+                        font-size: 16px;
+                        font-weight: 700;
+                        color: var(--navy);
+                        margin-top: 4px;
+                      "
+                    >
+                      789 Mt
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      background: var(--light);
+                      padding: 10px;
+                      border-radius: 8px;
+                    "
+                  >
+                    <div
+                      style="
+                        color: var(--muted);
+                        font-size: 10px;
+                        text-transform: uppercase;
+                        font-weight: 700;
+                      "
+                    >
+                      Global Consumption
+                    </div>
+                    <div
+                      style="
+                        font-size: 16px;
+                        font-weight: 700;
+                        color: var(--navy);
+                        margin-top: 4px;
+                      "
+                    >
+                      780 Mt
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      background: var(--light);
+                      padding: 10px;
+                      border-radius: 8px;
+                    "
+                  >
+                    <div
+                      style="
+                        color: var(--muted);
+                        font-size: 10px;
+                        text-transform: uppercase;
+                        font-weight: 700;
+                      "
+                    >
+                      Major Exchange
+                    </div>
+                    <div
+                      style="
+                        font-size: 16px;
+                        font-weight: 700;
+                        color: var(--navy);
+                        margin-top: 4px;
+                      "
+                    >
+                      LIFFE/CBOT
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      background: var(--light);
+                      padding: 10px;
+                      border-radius: 8px;
+                    "
+                  >
+                    <div
+                      style="
+                        color: var(--muted);
+                        font-size: 10px;
+                        text-transform: uppercase;
+                        font-weight: 700;
+                      "
+                    >
+                      Price Unit
+                    </div>
+                    <div
+                      style="
+                        font-size: 16px;
+                        font-weight: 700;
+                        color: var(--navy);
+                        margin-top: 4px;
+                      "
+                    >
+                      £/tonne
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="comm-seasonal" style="display: none">
+            <div class="widget">
+              <div class="widget-title">10-Year Seasonal Price Index</div>
+              <div style="padding: 8px 0">
+                <div class="seasonal-bars">
+                  <div class="s-bar low" style="height: 42%"></div>
+                  <div class="s-bar low" style="height: 38%"></div>
+                  <div class="s-bar mid" style="height: 50%"></div>
+                  <div class="s-bar mid" style="height: 55%"></div>
+                  <div class="s-bar active" style="height: 65%"></div>
+                  <div class="s-bar high" style="height: 80%"></div>
+                  <div class="s-bar high" style="height: 90%"></div>
+                  <div class="s-bar low" style="height: 35%"></div>
+                  <div class="s-bar low" style="height: 30%"></div>
+                  <div class="s-bar mid" style="height: 48%"></div>
+                  <div class="s-bar mid" style="height: 52%"></div>
+                  <div class="s-bar low" style="height: 40%"></div>
+                </div>
+                <div class="month-labels">
+                  <span class="m-label">Jan</span
+                  ><span class="m-label">Feb</span
+                  ><span class="m-label">Mar</span
+                  ><span class="m-label">Apr</span
+                  ><span class="m-label">May</span
+                  ><span class="m-label">Jun</span
+                  ><span class="m-label">Jul</span
+                  ><span class="m-label">Aug</span
+                  ><span class="m-label">Sep</span
+                  ><span class="m-label">Oct</span
+                  ><span class="m-label">Nov</span
+                  ><span class="m-label">Dec</span>
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  gap: 16px;
+                  margin-top: 8px;
+                  font-size: 11px;
+                  flex-wrap: wrap;
+                "
+              >
+                <div style="display: flex; align-items: center; gap: 6px">
+                  <div
+                    style="
+                      width: 12px;
+                      height: 12px;
+                      border-radius: 2px;
+                      background: #fde8e8;
+                    "
+                  ></div>
+                  Seasonally high
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px">
+                  <div
+                    style="
+                      width: 12px;
+                      height: 12px;
+                      border-radius: 2px;
+                      background: #d1fae5;
+                    "
+                  ></div>
+                  Seasonally low
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px">
+                  <div
+                    style="
+                      width: 12px;
+                      height: 12px;
+                      border-radius: 2px;
+                      background: #1a7fd4;
+                    "
+                  ></div>
+                  Current month
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SCREEN: ALERTS ===== -->
+      <div class="screen" id="screen-alerts">
+        <div class="page-content">
+          <div class="page-header">
+            <div class="page-title">Price Alerts</div>
+            <div style="font-size: 13px; color: var(--muted)">
+              34 active alerts · 3 triggered today
+            </div>
+          </div>
+          <div class="alerts-layout">
+            <div class="create-alert-card">
+              <div class="section-title">Create New Alert</div>
+              <div class="form-group">
+                <label
+                  class="form-label"
+                  style="margin-bottom: 6px; font-size: 11px"
+                  >Commodity</label
+                >
+                <input
+                  type="text"
+                  placeholder="Search 17,000+ commodities..."
+                  value="Wheat (UK Feed)"
+                />
+              </div>
+              <div class="form-group">
+                <label
+                  class="form-label"
+                  style="font-size: 11px; margin-bottom: 6px"
+                  >Alert Type</label
+                >
+                <div class="alert-type-row">
+                  <button
+                    class="alert-type-btn active"
+                    onclick="setAlertType(this)"
+                  >
+                    Price Level
+                  </button>
+                  <button class="alert-type-btn" onclick="setAlertType(this)">
+                    % Change
+                  </button>
+                  <button class="alert-type-btn" onclick="setAlertType(this)">
+                    Forecast Signal
+                  </button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label
+                  class="form-label"
+                  style="font-size: 11px; margin-bottom: 6px"
+                  >Direction</label
+                >
+                <div class="direction-row">
+                  <button class="dir-btn active" onclick="setDir(this)">
+                    ▲ Above
+                  </button>
+                  <button class="dir-btn" onclick="setDir(this)">
+                    ▼ Below
+                  </button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label
+                  class="form-label"
+                  style="font-size: 11px; margin-bottom: 6px"
+                  >Threshold Value</label
+                >
+                <input type="number" placeholder="e.g. 250.00" value="250" />
+              </div>
+              <div class="form-group">
+                <label
+                  class="form-label"
+                  style="font-size: 11px; margin-bottom: 6px"
+                  >Notification Method</label
+                >
+                <div class="notif-checks">
+                  <div class="check-item">
+                    <input type="checkbox" checked id="n-email" /><label
+                      for="n-email"
+                      >📧 Email</label
+                    >
+                  </div>
+                  <div class="check-item">
+                    <input type="checkbox" checked id="n-app" /><label
+                      for="n-app"
+                      >🔔 In-App notification</label
+                    >
+                  </div>
+                  <div class="check-item">
+                    <input type="checkbox" id="n-push" /><label for="n-push"
+                      >📱 Mobile push</label
+                    >
+                  </div>
+                  <div class="check-item">
+                    <input type="checkbox" id="n-slack" /><label for="n-slack"
+                      >💬 Slack webhook</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label
+                  class="form-label"
+                  style="font-size: 11px; margin-bottom: 6px"
+                  >Frequency</label
+                >
+                <select>
+                  <option>Immediately</option>
+                  <option>Daily Digest</option>
+                  <option>Weekly Summary</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label
+                  class="form-label"
+                  style="font-size: 11px; margin-bottom: 6px"
+                  >Label (optional)</label
+                >
+                <input
+                  type="text"
+                  placeholder="e.g. Bread contract hedge trigger"
+                />
+              </div>
+              <button
+                class="full-btn"
+                onclick="
+                  showToast(
+                    '✅ Alert saved — you\'ll be notified when Wheat exceeds £250/t',
+                  )
+                "
+              >
+                Save Alert
+              </button>
+            </div>
+
+            <div class="alerts-list">
+              <div class="alerts-list-header">
+                <div
+                  style="font-size: 15px; font-weight: 700; color: var(--navy)"
+                >
+                  My Alerts
+                </div>
+                <div style="display: flex; gap: 6px">
+                  <button class="btn-sm">Filter ▾</button>
+                  <button
+                    class="btn-sm btn-navy"
+                    onclick="showToast('All alerts exported')"
+                  >
+                    ⬇ Export
+                  </button>
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  gap: 8px;
+                  padding: 8px 0 12px;
+                  border-bottom: 1px solid var(--border);
+                  font-size: 11px;
+                  font-weight: 700;
+                  color: var(--muted);
+                  text-transform: uppercase;
+                  letter-spacing: 0.4px;
+                "
+              >
+                <span style="flex: 1.5">Commodity</span
+                ><span style="flex: 1">Type</span
+                ><span style="flex: 1">Threshold</span
+                ><span style="flex: 0.8">Status</span
+                ><span style="flex: 1; text-align: right">Last Triggered</span>
+              </div>
+              <div
+                class="alert-row"
+                onclick="showToast('Editing Wheat alert...')"
+              >
+                <span class="al-commodity">Wheat (UK Feed)</span
+                ><span class="al-type">Price Level</span
+                ><span class="al-threshold">&gt; £250/t</span
+                ><span class="al-status st-active">Active</span
+                ><span class="al-triggered">2 days ago</span>
+              </div>
+              <div
+                class="alert-row"
+                onclick="showToast('Editing Palm Oil alert...')"
+              >
+                <span class="al-commodity">Palm Oil</span
+                ><span class="al-type">% Change</span
+                ><span class="al-threshold">&gt; 5%/wk</span
+                ><span class="al-status st-active">Active</span
+                ><span class="al-triggered">Never</span>
+              </div>
+              <div
+                class="alert-row"
+                onclick="showToast('Alert paused — click to resume')"
+              >
+                <span class="al-commodity">Brent Crude</span
+                ><span class="al-type">Price Level</span
+                ><span class="al-threshold">&lt; $75/bbl</span
+                ><span class="al-status st-paused">Paused</span
+                ><span class="al-triggered">14 days ago</span>
+              </div>
+              <div
+                class="alert-row"
+                onclick="showToast('Editing Aluminium alert...')"
+              >
+                <span class="al-commodity">Aluminium (LME)</span
+                ><span class="al-type">Forecast Signal</span
+                ><span class="al-threshold">Any change</span
+                ><span class="al-status st-active">Active</span
+                ><span class="al-triggered">1 day ago</span>
+              </div>
+              <div
+                class="alert-row"
+                onclick="showToast('🔔 Alert triggered today at 09:14')"
+              >
+                <span class="al-commodity" style="color: var(--red)"
+                  >⚡ Cocoa (ICCO)</span
+                ><span class="al-type">Price Level</span
+                ><span class="al-threshold">&gt; $3,500/t</span
+                ><span class="al-status st-active">Active</span
+                ><span
+                  class="al-triggered"
+                  style="color: var(--red); font-weight: 700"
+                  >Today 09:14</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SCREEN: API & EXPORT ===== -->
+      <div class="screen" id="screen-api">
+        <div class="page-content">
+          <div class="page-header">
+            <div class="page-title">Import API & Data Export</div>
+            <button
+              class="btn-sm btn-navy"
+              onclick="showToast('API documentation opened in new tab')"
+            >
+              📖 View Full Docs
+            </button>
+          </div>
+          <div class="api-layout">
+            <div style="display: flex; flex-direction: column; gap: 16px">
+              <div class="api-card">
+                <div class="section-title">API Key Manager</div>
+                <div class="api-key-row">
+                  <span class="api-key-val">mk_live_xK9j2...••••••••</span
+                  ><button
+                    class="btn-sm"
+                    onclick="showToast('Key copied to clipboard')"
+                  >
+                    Copy</button
+                  ><button
+                    class="btn-sm"
+                    style="color: var(--red); border-color: #fecaca"
+                    onclick="showToast('API key revoked')"
+                  >
+                    Revoke
+                  </button>
+                </div>
+                <button
+                  class="btn-sm btn-navy"
+                  onclick="showToast('New API key generated')"
+                >
+                  + Generate New Key
+                </button>
+                <div style="margin-top: 12px">
+                  <div
+                    style="
+                      font-size: 11px;
+                      color: var(--muted);
+                      margin-bottom: 4px;
+                    "
+                  >
+                    Scope: Read-only · Rate limit: 1,000 req/day
+                  </div>
+                  <div class="usage-bar-wrap">
+                    <div class="usage-bar" style="width: 42%"></div>
+                  </div>
+                  <div style="font-size: 11px; color: var(--muted)">
+                    420 / 1,000 requests used today
+                  </div>
+                </div>
+              </div>
+              <div class="api-card">
+                <div class="section-title">Key API Endpoints</div>
+                <div class="endpoint-row">
+                  <span class="method-badge">GET</span
+                  ><span class="endpoint-path">/v2/prices/{id}</span
+                  ><span class="endpoint-desc">Price series</span
+                  ><button
+                    class="btn-sm"
+                    onclick="showToast('Test call executed → 200 OK')"
+                  >
+                    Try
+                  </button>
+                </div>
+                <div class="endpoint-row">
+                  <span class="method-badge">GET</span
+                  ><span class="endpoint-path">/v2/prices/latest</span
+                  ><span class="endpoint-desc">Latest prices</span
+                  ><button
+                    class="btn-sm"
+                    onclick="showToast('Test call executed → 200 OK')"
+                  >
+                    Try
+                  </button>
+                </div>
+                <div class="endpoint-row">
+                  <span class="method-badge">GET</span
+                  ><span class="endpoint-path">/v2/forecasts/{id}</span
+                  ><span class="endpoint-desc">Forecast + CI</span
+                  ><button
+                    class="btn-sm"
+                    onclick="showToast('Test call executed → 200 OK')"
+                  >
+                    Try
+                  </button>
+                </div>
+                <div class="endpoint-row">
+                  <span class="method-badge">GET</span
+                  ><span class="endpoint-path">/v2/hedging/{id}</span
+                  ><span class="endpoint-desc">Hedging signal</span
+                  ><button
+                    class="btn-sm"
+                    onclick="showToast('Test call executed → 200 OK')"
+                  >
+                    Try
+                  </button>
+                </div>
+                <div class="endpoint-row">
+                  <span class="method-badge">GET</span
+                  ><span class="endpoint-path">/v2/cost-models/{id}</span
+                  ><span class="endpoint-desc">Cost model output</span
+                  ><button
+                    class="btn-sm"
+                    onclick="showToast('Test call executed → 200 OK')"
+                  >
+                    Try
+                  </button>
+                </div>
+                <div class="endpoint-row">
+                  <span
+                    class="method-badge"
+                    style="background: #dbeafe; color: #1e40af"
+                    >POST</span
+                  ><span class="endpoint-path">/v2/alerts</span
+                  ><span class="endpoint-desc">Create alert</span
+                  ><button
+                    class="btn-sm"
+                    onclick="showToast('Test call executed → 201 Created')"
+                  >
+                    Try
+                  </button>
+                </div>
+                <div class="endpoint-row">
+                  <span class="method-badge">GET</span
+                  ><span class="endpoint-path">/v2/commodities/search</span
+                  ><span class="endpoint-desc">Search catalogue</span
+                  ><button
+                    class="btn-sm"
+                    onclick="showToast('Test call executed → 200 OK')"
+                  >
+                    Try
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 16px">
+              <div class="api-card">
+                <div class="section-title">Export Options</div>
+                <div class="export-option">
+                  <div>
+                    <div style="font-size: 13px; font-weight: 600">
+                      Single commodity CSV/XLSX
+                    </div>
+                    <div style="font-size: 11px; color: var(--muted)">
+                      One-click from any chart toolbar
+                    </div>
+                  </div>
+                  <button
+                    class="btn-sm btn-navy"
+                    onclick="showToast('Downloading XLSX...')"
+                  >
+                    ⬇ Export
+                  </button>
+                </div>
+                <div class="export-option">
+                  <div>
+                    <div style="font-size: 13px; font-weight: 600">
+                      Bulk export (up to 500 commodities)
+                    </div>
+                    <div style="font-size: 11px; color: var(--muted)">
+                      Custom date range · XLSX format
+                    </div>
+                  </div>
+                  <button
+                    class="btn-sm"
+                    onclick="showToast('Bulk export queued — email when ready')"
+                  >
+                    Configure
+                  </button>
+                </div>
+                <div class="export-option">
+                  <div>
+                    <div style="font-size: 13px; font-weight: 600">
+                      Scheduled export
+                    </div>
+                    <div style="font-size: 11px; color: var(--muted)">
+                      Auto-email XLSX every Monday 06:00 UTC
+                    </div>
+                  </div>
+                  <button
+                    class="btn-sm"
+                    onclick="showToast('Schedule configured')"
+                  >
+                    Set Up
+                  </button>
+                </div>
+                <div class="export-option">
+                  <div>
+                    <div style="font-size: 13px; font-weight: 600">
+                      PDF branded report
+                    </div>
+                    <div style="font-size: 11px; color: var(--muted)">
+                      Stakeholder-ready multi-page report
+                    </div>
+                  </div>
+                  <button
+                    class="btn-sm"
+                    onclick="showToast('PDF report generated')"
+                  >
+                    Generate PDF
+                  </button>
+                </div>
+              </div>
+              <div class="api-card">
+                <div class="section-title">Pre-built Connectors</div>
+                <div class="connector-grid">
+                  <div
+                    class="connector-chip"
+                    onclick="showToast('SAP Ariba connector docs opened')"
+                  >
+                    SAP Ariba
+                  </div>
+                  <div
+                    class="connector-chip"
+                    onclick="showToast('Coupa connector docs opened')"
+                  >
+                    Coupa
+                  </div>
+                  <div
+                    class="connector-chip"
+                    onclick="showToast('Jaggaer connector docs opened')"
+                  >
+                    Jaggaer
+                  </div>
+                  <div
+                    class="connector-chip"
+                    onclick="showToast('Power BI connector installed')"
+                  >
+                    Power BI
+                  </div>
+                  <div
+                    class="connector-chip"
+                    onclick="showToast('Excel add-in downloaded')"
+                  >
+                    Excel Add-in
+                  </div>
+                  <div
+                    class="connector-chip"
+                    onclick="showToast('Webhook endpoint registered')"
+                  >
+                    Webhooks
+                  </div>
+                </div>
+                <div
+                  style="
+                    margin-top: 12px;
+                    padding: 10px;
+                    background: #f0fdf4;
+                    border-radius: 8px;
+                    border: 1px solid #bbf7d0;
+                  "
+                >
+                  <div
+                    style="font-size: 12px; font-weight: 600; color: #14532d"
+                  >
+                    💡 Excel formula
+                  </div>
+                  <div
+                    style="
+                      font-family: &quot;Courier New&quot;, monospace;
+                      font-size: 11px;
+                      color: #15803d;
+                      margin-top: 4px;
+                    "
+                  >
+                    =MINTEC("wheat-uk-feed", TODAY())
+                  </div>
+                </div>
+              </div>
+              <div class="api-card">
+                <div class="section-title">Webhook Manager</div>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 8px;
+                    background: var(--light);
+                    border-radius: 8px;
+                    margin-bottom: 8px;
+                    font-size: 12px;
+                  "
+                >
+                  <span
+                    style="
+                      background: #d1fae5;
+                      color: #065f46;
+                      padding: 2px 8px;
+                      border-radius: 4px;
+                      font-size: 10px;
+                      font-weight: 700;
+                    "
+                    >ACTIVE</span
+                  >
+                  <span style="flex: 1; font-family: monospace; font-size: 11px"
+                    >https://alerts.acme.com/mintec</span
+                  >
+                  <button
+                    class="btn-sm"
+                    onclick="showToast('Webhook test ping sent')"
+                  >
+                    Test
+                  </button>
+                </div>
+                <button
+                  class="btn-sm btn-navy"
+                  onclick="showToast('New webhook endpoint added')"
+                >
+                  + Register endpoint
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SCREEN: REPORTS ===== -->
+      <div class="screen" id="screen-reports">
+        <div class="page-content">
+          <div class="page-header">
+            <div class="page-title">Reports & Downloads</div>
+            <button
+              class="btn-sm btn-navy"
+              onclick="showToast('Custom report builder opened')"
+            >
+              + Custom Report
+            </button>
+          </div>
+          <div class="reports-filter-bar">
+            <select class="tb-select">
+              <option>All Report Types</option>
+              <option>Weekly Price Roundup</option>
+              <option>Category Deep Dive</option>
+              <option>Forecast Update</option>
+              <option>Custom Chart Export</option>
+              <option>Procurement Risk</option>
+            </select>
+            <select class="tb-select">
+              <option>All Categories</option>
+              <option>Agri-Food</option>
+              <option>Energy</option>
+              <option>Metals</option>
+              <option>Packaging</option>
+            </select>
+            <input
+              type="text"
+              placeholder="🔍 Search reports..."
+              style="
+                width: 220px;
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                padding: 6px 10px;
+                font-size: 13px;
+              "
+            />
+            <div
+              style="margin-left: auto; font-size: 12px; color: var(--muted)"
+            >
+              24 reports available
+            </div>
+          </div>
+          <div class="report-grid">
+            <div
+              class="report-card"
+              onclick="showToast('Opening report preview...')"
+            >
+              <div class="report-type-badge">Weekly</div>
+              <div class="report-title">Weekly Price Roundup — 5 May 2026</div>
+              <div class="report-desc">
+                Top 20 commodity movers this week with analyst commentary.
+                Wheat, Cocoa, and Brent Crude featured prominently.
+              </div>
+              <div class="report-meta">
+                <span class="report-freq"
+                  >🔄 Published weekly · Fri 08:00 UTC</span
+                >
+                <div class="report-format">
+                  <span class="fmt-tag">PDF</span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="report-card"
+              onclick="showToast('Opening report preview...')"
+            >
+              <div class="report-type-badge">Monthly</div>
+              <div class="report-title">Agri-Food Deep Dive — April 2026</div>
+              <div class="report-desc">
+                Full supply and demand analysis for Grains, Oilseeds, Sugar and
+                Dairy. Includes regional balance sheets and trade flow maps.
+              </div>
+              <div class="report-meta">
+                <span class="report-freq"
+                  >📅 Published monthly · 1st business day</span
+                >
+                <div class="report-format">
+                  <span class="fmt-tag">PDF</span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="report-card"
+              onclick="showToast('Opening report preview...')"
+            >
+              <div class="report-type-badge">Forecast</div>
+              <div class="report-title">Forecast Update — 5 May 2026</div>
+              <div class="report-desc">
+                Updated 6-month price forecasts across all 600+ covered
+                commodities. Confidence interval bands and scenario tables
+                included.
+              </div>
+              <div class="report-meta">
+                <span class="report-freq"
+                  >🔄 Published weekly · Mon 07:00 UTC</span
+                >
+                <div class="report-format">
+                  <span class="fmt-tag">PDF</span
+                  ><span class="fmt-tag">XLSX</span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="report-card"
+              onclick="showToast('Opening report preview...')"
+            >
+              <div
+                class="report-type-badge"
+                style="background: #fef3c7; color: #92400e"
+              >
+                Risk
+              </div>
+              <div class="report-title">
+                Procurement Risk Report — April 2026
+              </div>
+              <div class="report-desc">
+                Portfolio-level risk score with commodity heat map. Identifies
+                exposure concentrations and hedging gaps across your tracked
+                basket.
+              </div>
+              <div class="report-meta">
+                <span class="report-freq">📅 Published monthly</span>
+                <div class="report-format">
+                  <span class="fmt-tag">PDF</span>
+                </div>
+              </div>
+            </div>
+            <div class="report-card" onclick="showToast('Download started...')">
+              <div
+                class="report-type-badge"
+                style="background: #d1fae5; color: #065f46"
+              >
+                On Demand
+              </div>
+              <div class="report-title">Bulk Price Download — Custom Range</div>
+              <div class="report-desc">
+                Export up to 500 commodities with custom date range. Choose
+                series, currency, and unit of measure before downloading.
+              </div>
+              <div class="report-meta">
+                <span class="report-freq">⬇ On demand</span>
+                <div class="report-format">
+                  <span class="fmt-tag">XLSX</span
+                  ><span class="fmt-tag">CSV</span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="report-card"
+              onclick="showToast('Alert history report downloaded')"
+            >
+              <div
+                class="report-type-badge"
+                style="background: #d1fae5; color: #065f46"
+              >
+                On Demand
+              </div>
+              <div class="report-title">Price Alert History Log</div>
+              <div class="report-desc">
+                Full log of all triggered alerts with timestamps, price levels
+                at trigger, and commodity context. Export as PDF or XLSX.
+              </div>
+              <div class="report-meta">
+                <span class="report-freq">⬇ On demand</span>
+                <div class="report-format">
+                  <span class="fmt-tag">PDF</span
+                  ><span class="fmt-tag">XLSX</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              margin-top: 16px;
+              background: #fff;
+              border: 1px solid var(--border);
+              border-radius: 12px;
+              padding: 16px;
+            "
+          >
+            <div
+              style="
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--navy);
+                margin-bottom: 10px;
+              "
+            >
+              📬 Report Subscriptions
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  font-size: 13px;
+                  padding: 8px 12px;
+                  background: var(--light);
+                  border-radius: 8px;
+                "
+              >
+                <span>Weekly Price Roundup</span>
+                <span
+                  style="color: var(--green); font-weight: 700; font-size: 12px"
+                  >✓ Subscribed · Every Friday</span
+                >
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  font-size: 13px;
+                  padding: 8px 12px;
+                  background: var(--light);
+                  border-radius: 8px;
+                "
+              >
+                <span>Agri-Food Deep Dive</span>
+                <button
+                  class="btn-sm"
+                  onclick="showToast('Subscribed to Agri-Food Deep Dive')"
+                >
+                  Subscribe
+                </button>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  font-size: 13px;
+                  padding: 8px 12px;
+                  background: var(--light);
+                  border-radius: 8px;
+                "
+              >
+                <span>Procurement Risk Report</span>
+                <span
+                  style="color: var(--green); font-weight: 700; font-size: 12px"
+                  >✓ Subscribed · Monthly</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div
+      id="toast"
+      style="
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: #0b1e3d;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        opacity: 0;
+        transition: all 0.25s;
+        pointer-events: none;
+        z-index: 9999;
+        white-space: nowrap;
+        max-width: 90vw;
+      "
+    ></div>
+
+    <script>
+      function showScreen(name) {
+        document
+          .querySelectorAll(".screen")
+          .forEach((s) => s.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) => n.classList.remove("active"));
+        const s = document.getElementById("screen-" + name);
+        if (s) s.classList.add("active");
+        const n = document.getElementById("nav-" + name);
+        if (n) n.classList.add("active");
+      }
+
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.style.opacity = "1";
+        t.style.transform = "translateX(-50%) translateY(0)";
+        clearTimeout(window._toastTimer);
+        window._toastTimer = setTimeout(() => {
+          t.style.opacity = "0";
+          t.style.transform = "translateX(-50%) translateY(20px)";
+        }, 2800);
+      }
+
+      function setActive(btn) {
+        const group = btn.closest(".toolbar-group, .date-range-strip");
+        if (group)
+          group
+            .querySelectorAll(".tb-btn,.dr-btn")
+            .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+      }
+
+      function togglePass() {
+        const p = document.getElementById("login-pass");
+        p.type = p.type === "password" ? "text" : "password";
+      }
+
+      function doLogin() {
+        const e = document.getElementById("login-email").value;
+        const p = document.getElementById("login-pass").value;
+        if (!e || !p) {
+          document.getElementById("err-banner").classList.add("show");
+          return;
+        }
+        document.getElementById("err-banner").classList.remove("show");
+        document.getElementById("mfa-section").classList.add("show");
+        showToast("Credentials verified — enter MFA code");
+      }
+
+      function otpNext(el, idx) {
+        const inputs = document.querySelectorAll(".otp-input");
+        if (el.value && idx < 5) inputs[idx + 1].focus();
+        if (idx === 5 && el.value) showToast("MFA verified — redirecting...");
+      }
+
+      function setHorizon(btn) {
+        document
+          .querySelectorAll(".horizon-tab")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        showToast("Forecast horizon: " + btn.textContent);
+      }
+
+      function toggleForecast() {
+        const o = document.getElementById("forecast-overlay");
+        const visible = o.style.display === "block";
+        o.style.display = visible ? "none" : "block";
+        showToast(
+          visible ? "Forecast overlay hidden" : "Forecast overlay shown",
+        );
+      }
+
+      function updateChartTitle(val) {
+        document.getElementById("chart-commodity-title").textContent = val;
+        showToast("Chart updated: " + val);
+      }
+
+      let crosshair = document.getElementById("chart-crosshair");
+      let chartTip = document.getElementById("chart-tip");
+      function showChartTip(e) {
+        const svg = document.getElementById("main-chart");
+        const rect = svg.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 620;
+        const price = (248 - ((x - 30) / 540) * 30).toFixed(2);
+        if (crosshair) {
+          crosshair.setAttribute("x1", x);
+          crosshair.setAttribute("x2", x);
+          crosshair.style.opacity = "0.6";
+        }
+        if (chartTip) {
+          chartTip.style.display = "block";
+          chartTip.style.left = e.clientX - rect.left + 12 + "px";
+          chartTip.style.top = e.clientY - rect.top - 30 + "px";
+          chartTip.textContent = "£" + price + "/t · LIFFE · May 2026";
+        }
+      }
+      function hideChartTip() {
+        if (crosshair) crosshair.style.opacity = "0";
+        if (chartTip) chartTip.style.display = "none";
+      }
+
+      function setAlertType(btn) {
+        document
+          .querySelectorAll(".alert-type-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+      }
+      function setDir(btn) {
+        document
+          .querySelectorAll(".dir-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+      }
+
+      function setCommTab(btn, tabId) {
+        document
+          .querySelectorAll(".comm-tab")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const tabs = [
+          "comm-overview",
+          "comm-price",
+          "comm-forecast",
+          "comm-sd",
+          "comm-drivers",
+          "comm-news",
+          "comm-facts",
+          "comm-seasonal",
+        ];
+        tabs.forEach((t) => {
+          const el = document.getElementById(t);
+          if (el) el.style.display = "none";
+        });
+        const active = document.getElementById(tabId);
+        if (active) active.style.display = "block";
+      }
+
+      function toggleAlgoCore() {
+        showToast("Toggling forecast model overlay");
+      }
+    </script>
+  </body>
+</html>

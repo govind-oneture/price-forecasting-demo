@@ -3734,6 +3734,44 @@
           </div>
 
           <div id="comm-drivers" style="display: none">
+            <!-- Power BI Filter Bar -->
+            <div style="display:grid;grid-template-columns:1fr 1.5fr 1fr 1.5fr;gap:12px;margin-bottom:20px;">
+              <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 16px;">
+                <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px;">Material Group</div>
+                <select style="width:100%;border:1px solid #e5e7eb;border-radius:6px;padding:8px 10px;font-size:13px;color:var(--text);appearance:auto;">
+                  <option>All</option><option>Grains</option><option>Oilseeds</option><option>Energy</option><option>Metals</option><option>Plastics</option><option>Softs</option>
+                </select>
+              </div>
+              <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 16px;">
+                <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px;">Material</div>
+                <select style="width:100%;border:1px solid #e5e7eb;border-radius:6px;padding:8px 10px;font-size:13px;color:var(--text);appearance:auto;">
+                  <option>All</option><option>Wheat (UK Feed)</option><option>Palm Oil</option><option>Brent Crude</option><option>Cocoa</option><option>Aluminium</option><option>Natural Gas</option>
+                </select>
+              </div>
+              <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 16px;">
+                <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px;">Region</div>
+                <select style="width:100%;border:1px solid #e5e7eb;border-radius:6px;padding:8px 10px;font-size:13px;color:var(--text);appearance:auto;">
+                  <option>All</option><option>Europe</option><option>North America</option><option>Asia-Pacific</option><option>Middle East</option><option>Global</option>
+                </select>
+              </div>
+              <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 16px;">
+                <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px;">Timeline</div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <input type="date" value="2020-01-01" style="border:1px solid #e5e7eb;border-radius:6px;padding:6px 8px;font-size:12px;flex:1;">
+                  <input type="date" value="2026-04-30" style="border:1px solid #e5e7eb;border-radius:6px;padding:6px 8px;font-size:12px;flex:1;">
+                </div>
+                <div style="margin-top:6px;position:relative;height:4px;background:#e5e7eb;border-radius:2px;">
+                  <div style="position:absolute;left:0;right:0;height:4px;background:var(--navy);border-radius:2px;"></div>
+                  <div style="position:absolute;left:0;top:-3px;width:10px;height:10px;background:var(--navy);border-radius:50%;"></div>
+                  <div style="position:absolute;right:0;top:-3px;width:10px;height:10px;background:var(--navy);border-radius:50%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:12px;">
+              <span style="font-size:12px;color:var(--muted);">USD/MT</span>
+            </div>
+
             <!-- Merged Price History & Forecast Chart (Power BI style) -->
             <div class="widget">
               <div class="widget-title">Price History & Forecast Overview</div>

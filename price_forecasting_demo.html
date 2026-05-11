@@ -1372,6 +1372,241 @@
       select:focus {
         border-color: var(--accent);
       }
+      /* ===== IMPROVED CHART & GRAPH STYLES ===== */
+      .widget svg {
+        transition: all 0.2s ease;
+      }
+      .widget svg:hover {
+        filter: brightness(1.02);
+      }
+      .widget {
+        transition: all 0.2s ease;
+      }
+
+      /* Chart containers */
+      .chart-toolbar {
+        flex-wrap: wrap;
+      }
+
+      /* Better button states */
+      .dr-btn {
+        transition: all 0.15s ease;
+        font-weight: 500;
+      }
+      .dr-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: #f0f7ff;
+      }
+      .dr-btn.active {
+        box-shadow: 0 2px 4px rgba(11, 30, 61, 0.15);
+      }
+
+      /* Smooth tab transitions */
+      .comm-tab {
+        transition: all 0.15s ease;
+      }
+      .comm-tab:hover {
+        background: rgba(37, 99, 235, 0.08);
+        color: var(--accent);
+      }
+
+      /* KPI card improvements */
+      .kpi-card {
+        position: relative;
+        overflow: hidden;
+      }
+      .kpi-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 3px;
+        height: 100%;
+        background: var(--accent);
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      .kpi-card:hover::after {
+        opacity: 1;
+      }
+
+      /* Driver rows hover */
+      .driver-row {
+        transition: background 0.15s;
+        padding: 8px 4px;
+        border-radius: 6px;
+      }
+      .driver-row:hover {
+        background: var(--light);
+      }
+
+      /* Forecast table hover */
+      .forecast-table tr {
+        transition: background 0.15s;
+      }
+
+      /* Profile panel animation */
+      #profile-panel {
+        animation: slideDown 0.2s ease;
+      }
+      @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* ===== RESPONSIVE DESIGN ===== */
+      @media (max-width: 1200px) {
+        .comm-overview-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+        }
+        .dashboard-grid.three {
+          grid-template-columns: 1fr;
+        }
+        .chart-area-wrap {
+          grid-template-columns: 1fr;
+        }
+        .forecast-layout {
+          grid-template-columns: 1fr;
+        }
+        .alerts-layout {
+          grid-template-columns: 1fr;
+        }
+        .api-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 992px) {
+        .kpi-strip {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .topnav {
+          padding: 0 12px;
+          gap: 2px;
+        }
+        .nav-item {
+          font-size: 12px;
+          padding: 5px 8px;
+        }
+        .logo {
+          font-size: 14px;
+          margin-right: 12px;
+        }
+        .page-content {
+          padding: 16px;
+        }
+        .page-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        #profile-panel {
+          width: 300px;
+          right: 12px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .kpi-strip {
+          grid-template-columns: 1fr;
+        }
+        .comm-overview-grid {
+          grid-template-columns: 1fr;
+        }
+        .topnav {
+          height: auto;
+          flex-wrap: wrap;
+          padding: 8px 12px;
+          gap: 4px;
+        }
+        .nav-right {
+          width: 100%;
+          justify-content: flex-end;
+          margin-top: 4px;
+        }
+        .logo {
+          width: 100%;
+          margin-bottom: 4px;
+        }
+        .comm-tabs {
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        .filter-bar {
+          flex-direction: column;
+          gap: 8px;
+        }
+        .filter-bar .toolbar-group {
+          width: 100%;
+        }
+        .filter-bar select,
+        .tb-select {
+          width: 100%;
+        }
+        .chart-toolbar {
+          flex-direction: column;
+          gap: 8px;
+        }
+        .toolbar-group {
+          width: 100%;
+          flex-wrap: wrap;
+        }
+        .scenario-table {
+          font-size: 11px;
+        }
+        .scenario-table th,
+        .scenario-table td {
+          padding: 6px 8px;
+        }
+        .widget {
+          padding: 14px;
+        }
+        #profile-panel {
+          width: calc(100vw - 24px);
+          right: 12px;
+          left: 12px;
+        }
+        .hedging-badge {
+          font-size: 12px;
+          padding: 8px 12px;
+        }
+        .macro-grid {
+          grid-template-columns: 1fr;
+        }
+        /* Make all 2-col inline grids stack on mobile */
+        [style*="grid-template-columns: 1fr 1fr"],
+        [style*="grid-template-columns:1fr 1fr"] {
+          grid-template-columns: 1fr !important;
+        }
+        [style*="grid-template-columns:repeat(4,1fr)"],
+        [style*="grid-template-columns: repeat(4, 1fr)"] {
+          grid-template-columns: repeat(2, 1fr) !important;
+        }
+        [style*="grid-template-columns:repeat(7,1fr)"] {
+          grid-template-columns: repeat(2, 1fr) !important;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .page-title {
+          font-size: 16px;
+        }
+        .kpi-val {
+          font-size: 20px;
+        }
+        .nav-item {
+          font-size: 11px;
+          padding: 4px 6px;
+        }
+        .dr-btn, .tb-btn {
+          padding: 4px 8px;
+          font-size: 11px;
+        }
+      }
     </style>
 
     <div class="app">
@@ -1390,25 +1625,10 @@
         </button>
         <button
           class="nav-item"
-          id="nav-charts"
-          onclick="showScreen('charts')"
-          style="display: none"
-        >
-          Price Charts
-        </button>
-        <button
-          class="nav-item"
-          id="nav-forecast"
-          onclick="showScreen('forecast')"
-        >
-          Forecasting
-        </button>
-        <button
-          class="nav-item"
           id="nav-commodities"
           onclick="showScreen('commodities')"
         >
-          Commodities
+          Commodity Intelligence
         </button>
         <button class="nav-item" id="nav-alerts" onclick="showScreen('alerts')">
           Alerts
@@ -1438,7 +1658,33 @@
           >
             🔔<span class="badge"></span>
           </button>
-          <div class="avatar">JD</div>
+          <div class="avatar" onclick="toggleProfilePanel()" style="cursor:pointer;">JD</div>
+          <!-- Profile & Onboarding Panel -->
+          <div id="profile-panel" style="display:none;position:absolute;top:56px;right:24px;width:360px;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,0.12);padding:24px;z-index:1000;">
+            <div style="font-size:16px;font-weight:700;color:#0b1e3d;margin-bottom:4px;">Welcome! Let's personalize your experience</div>
+            <div style="font-size:12px;color:#64748b;margin-bottom:16px;">Set your preferences to see relevant commodities & forecasts</div>
+            <div style="margin-bottom:12px;">
+              <label style="font-size:11px;font-weight:600;text-transform:uppercase;color:#64748b;letter-spacing:0.5px;">Regional Preference</label>
+              <select style="width:100%;border:1px solid #e5e7eb;border-radius:6px;padding:7px 10px;font-size:13px;margin-top:4px;"><option>Europe</option><option>North America</option><option>Asia-Pacific</option><option>Middle East & Africa</option><option>Latin America</option><option>Global</option></select>
+            </div>
+            <div style="margin-bottom:12px;">
+              <label style="font-size:11px;font-weight:600;text-transform:uppercase;color:#64748b;letter-spacing:0.5px;">Spend on Categories</label>
+              <select style="width:100%;border:1px solid #e5e7eb;border-radius:6px;padding:7px 10px;font-size:13px;margin-top:4px;"><option>< £1M</option><option>£1M - £10M</option><option>£10M - £50M</option><option>£50M - £100M</option><option>> £100M</option></select>
+            </div>
+            <div style="margin-bottom:12px;">
+              <label style="font-size:11px;font-weight:600;text-transform:uppercase;color:#64748b;letter-spacing:0.5px;">Category Selection</label>
+              <select style="width:100%;border:1px solid #e5e7eb;border-radius:6px;padding:7px 10px;font-size:13px;margin-top:4px;"><option>All Categories</option><option>Animal Products</option><option>Currencies & Freight</option><option>Energy</option><option>Grains & Oilseeds</option><option>Metals</option><option>Plastics</option><option>Softs</option><option>Steel</option></select>
+            </div>
+            <div style="margin-bottom:12px;">
+              <label style="font-size:11px;font-weight:600;text-transform:uppercase;color:#64748b;letter-spacing:0.5px;">Currency Preference</label>
+              <select style="width:100%;border:1px solid #e5e7eb;border-radius:6px;padding:7px 10px;font-size:13px;margin-top:4px;"><option>GBP £</option><option>USD $</option><option>EUR €</option><option>JPY ¥</option><option>CNY ¥</option></select>
+            </div>
+            <div style="margin-bottom:16px;">
+              <label style="font-size:11px;font-weight:600;text-transform:uppercase;color:#64748b;letter-spacing:0.5px;">Destination Region</label>
+              <select style="width:100%;border:1px solid #e5e7eb;border-radius:6px;padding:7px 10px;font-size:13px;margin-top:4px;"><option>UK</option><option>EU</option><option>North America</option><option>Asia</option><option>Middle East</option><option>Global</option></select>
+            </div>
+            <button style="width:100%;background:#0b1e3d;color:#fff;border:none;border-radius:8px;padding:11px;font-size:14px;font-weight:600;cursor:pointer;" onclick="toggleProfilePanel();showToast('✅ Preferences saved!')">Save Preferences</button>
+          </div>
         </div>
       </nav>
 
@@ -2222,7 +2468,7 @@
             </div>
 
             <div class="price-drivers-panel">
-              <div class="section-title">Price Drivers</div>
+              <div class="section-title">Pricing Insights</div>
               <div class="driver-row">
                 <span class="driver-name">Supply</span
                 ><span class="driver-status ds-tight">Tight</span
@@ -2259,20 +2505,21 @@
                 ><span class="driver-trend">▲ Adverse</span>
               </div>
               <div class="separator"></div>
-              <div class="section-title">Source & Frequency</div>
-              <div
-                style="font-size: 12px; color: var(--muted); line-height: 1.8"
-              >
-                <div>📍 LIFFE / AHDB</div>
-                <div>🔄 Updated daily at 17:30 UTC</div>
-                <div>📊 17,000+ commodities in system</div>
-              </div>
-              <div class="separator"></div>
               <button
-                class="full-btn"
-                onclick="showToast('Alert created for Wheat')"
+                style="
+                  width: 100%;
+                  background: #fff;
+                  color: var(--navy);
+                  border: 1px solid var(--border);
+                  border-radius: 8px;
+                  padding: 10px;
+                  font-size: 13px;
+                  cursor: pointer;
+                  margin-top: 8px;
+                "
+                onclick="showScreen('commodities')"
               >
-                🔔 Set Price Alert
+                📈 View Commodity Intelligence →
               </button>
               <button
                 style="
@@ -2286,9 +2533,9 @@
                   cursor: pointer;
                   margin-top: 8px;
                 "
-                onclick="showScreen('forecast')"
+                onclick="showToast('Added to Watchlist ✓')"
               >
-                📈 View Forecast →
+                ⭐ Add to Watchlist
               </button>
             </div>
           </div>
@@ -2803,6 +3050,7 @@
               </button>
             </div>
           </div>
+
           <div class="comm-tabs">
             <button
               class="comm-tab active"
@@ -2810,32 +3058,17 @@
             >
               Overview
             </button>
-            <button class="comm-tab" onclick="setCommTab(this, 'comm-price')">
-              Price History
-            </button>
-            <button
-              class="comm-tab"
-              onclick="setCommTab(this, 'comm-forecast')"
-            >
-              Forecast
-            </button>
-            <button class="comm-tab" onclick="setCommTab(this, 'comm-sd')">
-              Supply & Demand
-            </button>
             <button class="comm-tab" onclick="setCommTab(this, 'comm-drivers')">
-              Price Drivers
+              Pricing Insights
+            </button>
+            <button class="comm-tab" onclick="setCommTab(this, 'comm-zscore')">
+              Z-Score Model
             </button>
             <button class="comm-tab" onclick="setCommTab(this, 'comm-news')">
               News & Events
             </button>
-            <button class="comm-tab" onclick="setCommTab(this, 'comm-facts')">
-              Key Facts
-            </button>
-            <button
-              class="comm-tab"
-              onclick="setCommTab(this, 'comm-seasonal')"
-            >
-              Seasonal Patterns
+            <button class="comm-tab" onclick="setCommTab(this, 'comm-hedging')">
+              Hedging
             </button>
           </div>
 
@@ -2861,9 +3094,9 @@
                 </div>
               </div>
               <div class="kpi-card">
-                <div class="kpi-label">Analyst Rating</div>
-                <div class="kpi-val" style="font-size: 18px">Bullish ▲</div>
-                <div class="kpi-sub kpi-up">Updated 5 May</div>
+                <div class="kpi-label">Forecast (6M)</div>
+                <div class="kpi-val">£275/t</div>
+                <div class="kpi-sub kpi-up">▲ +10.9% projected</div>
               </div>
             </div>
             <div class="dashboard-grid">
@@ -2921,94 +3154,155 @@
                 </div>
               </div>
               <div class="widget">
-                <div class="widget-title">Category Coverage</div>
-                <div style="display: flex; flex-direction: column; gap: 6px">
-                  <div
-                    style="
-                      display: flex;
-                      align-items: center;
-                      justify-content: space-between;
-                      font-size: 12px;
-                      padding: 5px 0;
-                      border-bottom: 1px solid #f3f4f6;
-                    "
-                  >
-                    <span style="font-weight: 600">Agri-Food</span
-                    ><span style="color: var(--muted)"
-                      >Grains · Oilseeds · Dairy · Meat · Seafood · Sugar</span
-                    ><span style="font-weight: 700; color: var(--accent)"
-                      >8,000+</span
-                    >
-                  </div>
-                  <div
-                    style="
-                      display: flex;
-                      align-items: center;
-                      justify-content: space-between;
-                      font-size: 12px;
-                      padding: 5px 0;
-                      border-bottom: 1px solid #f3f4f6;
-                    "
-                  >
-                    <span style="font-weight: 600">Packaging</span
-                    ><span style="color: var(--muted)"
-                      >Plastics · Paper · Glass · Cans</span
-                    ><span style="font-weight: 700; color: var(--accent)"
-                      >2,500+</span
-                    >
-                  </div>
-                  <div
-                    style="
-                      display: flex;
-                      align-items: center;
-                      justify-content: space-between;
-                      font-size: 12px;
-                      padding: 5px 0;
-                      border-bottom: 1px solid #f3f4f6;
-                    "
-                  >
-                    <span style="font-weight: 600">Energy</span
-                    ><span style="color: var(--muted)"
-                      >Crude · Gas · Biofuel · Coal</span
-                    ><span style="font-weight: 700; color: var(--accent)"
-                      >800+</span
-                    >
-                  </div>
-                  <div
-                    style="
-                      display: flex;
-                      align-items: center;
-                      justify-content: space-between;
-                      font-size: 12px;
-                      padding: 5px 0;
-                      border-bottom: 1px solid #f3f4f6;
-                    "
-                  >
-                    <span style="font-weight: 600">Metals</span
-                    ><span style="color: var(--muted)"
-                      >Aluminium · Steel · Copper</span
-                    ><span style="font-weight: 700; color: var(--accent)"
-                      >500+</span
-                    >
-                  </div>
-                  <div
-                    style="
-                      display: flex;
-                      align-items: center;
-                      justify-content: space-between;
-                      font-size: 12px;
-                      padding: 5px 0;
-                    "
-                  >
-                    <span style="font-weight: 600">Soft Commod.</span
-                    ><span style="color: var(--muted)"
-                      >Coffee · Cocoa · Cotton · Rubber</span
-                    ><span style="font-weight: 700; color: var(--accent)"
-                      >300+</span
-                    >
+                <div class="widget-title">Time Series Overview</div>
+                <div style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
+                  <span style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-right:4px;">Historical:</span>
+                  <button class="dr-btn" onclick="setActive(this)">1W</button>
+                  <button class="dr-btn" onclick="setActive(this)">1M</button>
+                  <button class="dr-btn active" onclick="setActive(this)">3M</button>
+                  <button class="dr-btn" onclick="setActive(this)">6M</button>
+                  <button class="dr-btn" onclick="setActive(this)">1Y</button>
+                  <span style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-left:12px;margin-right:4px;">Forecast:</span>
+                  <button class="dr-btn" onclick="setActive(this)">3M</button>
+                  <button class="dr-btn active" onclick="setActive(this)">6M</button>
+                  <button class="dr-btn" onclick="setActive(this)">12M</button>
+                </div>
+                <svg width="100%" height="200" viewBox="0 0 700 200" preserveAspectRatio="none" style="background:#f8fafc;border-radius:8px;display:block;">
+                  <defs>
+                    <linearGradient id="ovHistGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1A7FD4" stop-opacity="0.12"/><stop offset="100%" stop-color="#1A7FD4" stop-opacity="0"/></linearGradient>
+                    <linearGradient id="ovFcGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#22a86b" stop-opacity="0.08"/><stop offset="100%" stop-color="#22a86b" stop-opacity="0"/></linearGradient>
+                  </defs>
+                  <line x1="0" y1="40" x2="700" y2="40" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                  <line x1="0" y1="80" x2="700" y2="80" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                  <line x1="0" y1="120" x2="700" y2="120" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                  <line x1="0" y1="160" x2="700" y2="160" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                  <text x="8" y="38" font-size="9" fill="#9CA3AF">£300</text>
+                  <text x="8" y="78" font-size="9" fill="#9CA3AF">£275</text>
+                  <text x="8" y="118" font-size="9" fill="#9CA3AF">£250</text>
+                  <text x="8" y="158" font-size="9" fill="#9CA3AF">£225</text>
+                  <line x1="420" y1="0" x2="420" y2="200" stroke="#9CA3AF" stroke-width="1.5" stroke-dasharray="6,3"/>
+                  <text x="424" y="12" font-size="9" fill="#9CA3AF">Today</text>
+                  <polyline points="30,155 80,148 130,142 180,136 230,140 280,130 330,118 380,108 420,100" fill="none" stroke="#1A7FD4" stroke-width="2.5" stroke-linejoin="round"/>
+                  <path d="M30,155 L80,148 L130,142 L180,136 L230,140 L280,130 L330,118 L380,108 L420,100 L420,200 L30,200 Z" fill="url(#ovHistGrad)"/>
+                  <polyline points="420,100 470,90 520,80 570,72 620,65 670,58" fill="none" stroke="#22a86b" stroke-width="2" stroke-dasharray="6,3"/>
+                  <path d="M420,100 L470,84 L520,72 L570,62 L620,53 L670,46 L670,70 L620,78 L570,84 L520,90 L470,98 L420,108 Z" fill="url(#ovFcGrad)"/>
+                  <text x="440" y="88" font-size="10" fill="#22a86b" font-weight="600">Forecast</text>
+                  <text x="60" y="192" font-size="9" fill="#9CA3AF">Nov 25</text>
+                  <text x="180" y="192" font-size="9" fill="#9CA3AF">Jan 26</text>
+                  <text x="300" y="192" font-size="9" fill="#9CA3AF">Mar 26</text>
+                  <text x="400" y="192" font-size="9" fill="#9CA3AF">May 26</text>
+                  <text x="530" y="192" font-size="9" fill="#9CA3AF">Aug 26</text>
+                  <text x="640" y="192" font-size="9" fill="#9CA3AF">Nov 26</text>
+                </svg>
+                <div style="display:flex;align-items:center;gap:16px;margin-top:8px;">
+                  <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:3px;background:#1a7fd4;border-radius:2px;"></div><span style="font-size:11px;color:var(--muted);">Historical</span></div>
+                  <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:0;border-top:2px dashed #22a86b;"></div><span style="font-size:11px;color:var(--muted);">Forecast</span></div>
+                  <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:8px;background:rgba(34,168,107,0.08);border-radius:2px;"></div><span style="font-size:11px;color:var(--muted);">Confidence Band</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Forecast Overview - Mintec style category table -->
+            <div class="widget" style="overflow-x:auto;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+                <div class="widget-title" style="margin-bottom:0;">Forecast Overview</div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div style="background:#e8f4f8;border-radius:8px;padding:6px 14px;display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:12px;font-weight:700;color:#2c3e50;">Hedging Recommendation</span>
+                    <span style="font-size:11px;color:var(--muted);">The four phases are: Avoid, Plan, Partial, and Full.</span>
                   </div>
                 </div>
               </div>
+
+              <!-- Categories in 2-column grid layout -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+              <!-- Category: Animal Products -->
+              <div>
+                <div style="background:#2c3e50;color:#fff;padding:8px 12px;border-radius:6px 6px 0 0;font-size:12px;font-weight:700;display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;">
+                  <span>Animal Products</span><span>Trend</span><span>Trend Start</span><span>Hedging</span>
+                </div>
+                <div style="border:1px solid #e5e7eb;border-top:none;border-radius:0 0 6px 6px;">
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Beef</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">08/09/2025</span><span><span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Full</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Broiler</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">15/12/2025</span><span><span style="background:#fef9c3;color:#713f12;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Partial</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Butter</span><span style="color:var(--red);font-weight:700;">▼</span><span style="color:var(--muted);">07/10/2025</span><span><span style="background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Avoid</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Cod</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">21/09/2025</span><span><span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Full</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Milk Powder SMP</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">15/10/2025</span><span><span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Plan</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Salmon</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">20/09/2025</span><span><span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Full</span></span></div>
+                </div>
+              </div>
+
+              <!-- Category: Energy -->
+              <div>
+                <div style="background:#2c3e50;color:#fff;padding:8px 12px;border-radius:6px 6px 0 0;font-size:12px;font-weight:700;display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;">
+                  <span>Energy</span><span>Trend</span><span>Trend Start</span><span>Hedging</span>
+                </div>
+                <div style="border:1px solid #e5e7eb;border-top:none;border-radius:0 0 6px 6px;">
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Bunker Fuel</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">26/11/2025</span><span><span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Full</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Coking Coal</span><span style="color:var(--red);font-weight:700;">▼</span><span style="color:var(--muted);">03/12/2025</span><span><span style="background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Avoid</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Crude Oil</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">30/11/2025</span><span><span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Full</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Electricity EEX</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">19/11/2025</span><span><span style="background:#fef9c3;color:#713f12;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Partial</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Natural Gas</span><span style="color:var(--red);font-weight:700;">▼</span><span style="color:var(--muted);">30/11/2025</span><span><span style="background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Avoid</span></span></div>
+                </div>
+              </div>
+
+              <!-- Category: Grains & Oilseeds -->
+              <div>
+                <div style="background:#2c3e50;color:#fff;padding:8px 12px;border-radius:6px 6px 0 0;font-size:12px;font-weight:700;display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;">
+                  <span>Grains & Oilseeds</span><span>Trend</span><span>Trend Start</span><span>Hedging</span>
+                </div>
+                <div style="border:1px solid #e5e7eb;border-top:none;border-radius:0 0 6px 6px;">
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Corn EU</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">18/11/2025</span><span><span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Full</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Palm Oil</span><span style="color:var(--red);font-weight:700;">▼</span><span style="color:var(--muted);">29/07/2025</span><span><span style="background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Avoid</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Rapeseed</span><span style="color:var(--red);font-weight:700;">▼</span><span style="color:var(--muted);">10/12/2025</span><span><span style="background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Avoid</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Rice</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">06/10/2025</span><span><span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Plan</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Soybeans</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">18/11/2025</span><span><span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Full</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Wheat EU</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">08/12/2025</span><span><span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Full</span></span></div>
+                </div>
+              </div>
+
+              <!-- Category: Metals -->
+              <div>
+                <div style="background:#2c3e50;color:#fff;padding:8px 12px;border-radius:6px 6px 0 0;font-size:12px;font-weight:700;display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;">
+                  <span>Metals</span><span>Trend</span><span>Trend Start</span><span>Hedging</span>
+                </div>
+                <div style="border:1px solid #e5e7eb;border-top:none;border-radius:0 0 6px 6px;">
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Alu Alloy</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">14/12/2025</span><span><span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Plan</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Aluminium</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">19/12/2025</span><span><span style="background:#fef9c3;color:#713f12;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Partial</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Copper</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">18/09/2025</span><span><span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Full</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Nickel</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">30/09/2025</span><span><span style="background:#fef9c3;color:#713f12;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Partial</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Zinc</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">08/12/2025</span><span><span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Full</span></span></div>
+                </div>
+              </div>
+
+              <!-- Category: Softs -->
+              <div>
+                <div style="background:#2c3e50;color:#fff;padding:8px 12px;border-radius:6px 6px 0 0;font-size:12px;font-weight:700;display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;">
+                  <span>Softs</span><span>Trend</span><span>Trend Start</span><span>Hedging</span>
+                </div>
+                <div style="border:1px solid #e5e7eb;border-top:none;border-radius:0 0 6px 6px;">
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Cocoa</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">18/11/2025</span><span><span style="background:#fef9c3;color:#713f12;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Partial</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Coffee Arabica</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">21/07/2025</span><span><span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Full</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Cotton</span><span style="color:var(--red);font-weight:700;">▼</span><span style="color:var(--muted);">18/11/2025</span><span><span style="background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Avoid</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Sugar</span><span style="color:var(--red);font-weight:700;">▼</span><span style="color:var(--muted);">22/10/2025</span><span><span style="background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Avoid</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Wood</span><span style="color:var(--red);font-weight:700;">▼</span><span style="color:var(--muted);">30/09/2025</span><span><span style="background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Avoid</span></span></div>
+                </div>
+              </div>
+
+              <!-- Category: Steel -->
+              <div>
+                <div style="background:#2c3e50;color:#fff;padding:8px 12px;border-radius:6px 6px 0 0;font-size:12px;font-weight:700;display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;">
+                  <span>Steel</span><span>Trend</span><span>Trend Start</span><span>Hedging</span>
+                </div>
+                <div style="border:1px solid #e5e7eb;border-top:none;border-radius:0 0 6px 6px;">
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Cold Rolled Coil</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">14/09/2025</span><span><span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Full</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Hot Dipped Galvanized</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">19/10/2025</span><span><span style="background:#fef9c3;color:#713f12;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Partial</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Hot Rolled Coil EU</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">13/10/2025</span><span><span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Full</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Pig Iron</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">08/11/2025</span><span><span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Plan</span></span></div>
+                  <div style="display:grid;grid-template-columns:2fr 0.6fr 1fr 1fr;gap:8px;padding:7px 12px;font-size:12px;align-items:center;"><span style="color:#1a7fd4;font-weight:500;">Stainless</span><span style="color:var(--green);font-weight:700;">▲</span><span style="color:var(--muted);">11/06/2025</span><span><span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Full</span></span></div>
+                </div>
+              </div>
+              </div><!-- close 2-column grid -->
             </div>
           </div>
 
@@ -3227,7 +3521,7 @@
                 </div>
               </div>
               <div class="price-drivers-panel">
-                <div class="section-title">Price Drivers</div>
+                <div class="section-title">Pricing Insights</div>
                 <div class="driver-row">
                   <span class="driver-name">Supply</span
                   ><span class="driver-status ds-tight">Tight</span
@@ -3258,22 +3552,6 @@
                   ><span class="driver-status ds-alert">Alert ⚠</span
                   ><span class="driver-trend">▲ Adverse</span>
                 </div>
-                <div class="separator"></div>
-                <div class="section-title">Source & Frequency</div>
-                <div
-                  style="font-size: 12px; color: var(--muted); line-height: 1.8"
-                >
-                  <div>📍 LIFFE / AHDB</div>
-                  <div>🔄 Updated daily at 17:30 UTC</div>
-                  <div>📊 17,000+ commodities in system</div>
-                </div>
-                <div class="separator"></div>
-                <button
-                  class="full-btn"
-                  onclick="showToast('Alert created for Wheat')"
-                >
-                  🔔 Set Price Alert
-                </button>
               </div>
             </div>
           </div>
@@ -3369,46 +3647,250 @@
           </div>
 
           <div id="comm-drivers" style="display: none">
+            <!-- Merged Price History & Forecast Chart (Power BI style) -->
             <div class="widget">
-              <div class="widget-title">Price Driver Analysis</div>
-              <div
-                style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px"
-              >
-                <div>
-                  <div class="driver-row">
-                    <span class="driver-name">Supply</span
-                    ><span class="driver-status ds-tight">Tight</span
-                    ><span class="driver-trend">▼ Tightening</span>
-                  </div>
-                  <div class="driver-row">
-                    <span class="driver-name">Demand</span
-                    ><span class="driver-status ds-high">High</span
-                    ><span class="driver-trend">▲ Increasing</span>
-                  </div>
-                  <div class="driver-row">
-                    <span class="driver-name">Weather</span
-                    ><span class="driver-status ds-alert">Alert ⚠</span
-                    ><span class="driver-trend">▲ Adverse</span>
-                  </div>
-                </div>
-                <div>
-                  <div class="driver-row">
-                    <span class="driver-name">Political Risk</span
-                    ><span class="driver-status ds-mod">Moderate</span
-                    ><span class="driver-trend">■ Stable</span>
-                  </div>
-                  <div class="driver-row">
-                    <span class="driver-name">Currency USD</span
-                    ><span class="driver-status ds-weak">Weak</span
-                    ><span class="driver-trend">▼ Weakening</span>
-                  </div>
-                  <div class="driver-row">
-                    <span class="driver-name">Energy Cost</span
-                    ><span class="driver-status ds-elev">Elevated</span
-                    ><span class="driver-trend">■ Stable</span>
-                  </div>
+              <div class="widget-title">Price History & Forecast Overview</div>
+              <div style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
+                <span style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-right:4px;">Historical:</span>
+                <button class="dr-btn" onclick="setActive(this)">1W</button>
+                <button class="dr-btn" onclick="setActive(this)">1M</button>
+                <button class="dr-btn active" onclick="setActive(this)">3M</button>
+                <button class="dr-btn" onclick="setActive(this)">6M</button>
+                <button class="dr-btn" onclick="setActive(this)">1Y</button>
+                <span style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-left:12px;margin-right:4px;">Forecast:</span>
+                <button class="dr-btn" onclick="setActive(this)">3M</button>
+                <button class="dr-btn active" onclick="setActive(this)">6M</button>
+                <button class="dr-btn" onclick="setActive(this)">12M</button>
+              </div>
+              <svg width="100%" height="200" viewBox="0 0 700 200" preserveAspectRatio="none" style="background:#f8fafc;border-radius:8px;display:block;">
+                <defs>
+                  <linearGradient id="piHistGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1A7FD4" stop-opacity="0.12"/><stop offset="100%" stop-color="#1A7FD4" stop-opacity="0"/></linearGradient>
+                  <linearGradient id="piFcGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#22a86b" stop-opacity="0.08"/><stop offset="100%" stop-color="#22a86b" stop-opacity="0"/></linearGradient>
+                </defs>
+                <line x1="0" y1="40" x2="700" y2="40" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                <line x1="0" y1="80" x2="700" y2="80" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                <line x1="0" y1="120" x2="700" y2="120" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                <line x1="0" y1="160" x2="700" y2="160" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                <text x="8" y="38" font-size="9" fill="#9CA3AF">£300</text>
+                <text x="8" y="78" font-size="9" fill="#9CA3AF">£275</text>
+                <text x="8" y="118" font-size="9" fill="#9CA3AF">£250</text>
+                <text x="8" y="158" font-size="9" fill="#9CA3AF">£225</text>
+                <line x1="420" y1="0" x2="420" y2="200" stroke="#9CA3AF" stroke-width="1.5" stroke-dasharray="6,3"/>
+                <text x="424" y="12" font-size="9" fill="#9CA3AF">Today</text>
+                <!-- Historical line (solid blue) -->
+                <polyline points="30,155 80,148 130,142 180,136 230,140 280,130 330,118 380,108 420,100" fill="none" stroke="#1A7FD4" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M30,155 L80,148 L130,142 L180,136 L230,140 L280,130 L330,118 L380,108 L420,100 L420,200 L30,200 Z" fill="url(#piHistGrad)"/>
+                <!-- Forecast line (dashed green) -->
+                <polyline points="420,100 470,90 520,80 570,72 620,65 670,58" fill="none" stroke="#22a86b" stroke-width="2" stroke-dasharray="6,3"/>
+                <path d="M420,100 L470,84 L520,72 L570,62 L620,53 L670,46 L670,70 L620,78 L570,84 L520,90 L470,98 L420,108 Z" fill="url(#piFcGrad)"/>
+                <text x="440" y="88" font-size="10" fill="#22a86b" font-weight="600">Forecast</text>
+                <text x="60" y="192" font-size="9" fill="#9CA3AF">Nov 25</text>
+                <text x="180" y="192" font-size="9" fill="#9CA3AF">Jan 26</text>
+                <text x="300" y="192" font-size="9" fill="#9CA3AF">Mar 26</text>
+                <text x="400" y="192" font-size="9" fill="#9CA3AF">May 26</text>
+                <text x="530" y="192" font-size="9" fill="#9CA3AF">Aug 26</text>
+                <text x="640" y="192" font-size="9" fill="#9CA3AF">Nov 26</text>
+              </svg>
+              <div style="display:flex;align-items:center;gap:16px;margin-top:8px;">
+                <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:3px;background:#1a7fd4;border-radius:2px;"></div><span style="font-size:11px;color:var(--muted);">Historical</span></div>
+                <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:0;border-top:2px dashed #22a86b;"></div><span style="font-size:11px;color:var(--muted);">Forecast</span></div>
+                <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:8px;background:rgba(34,168,107,0.08);border-radius:2px;"></div><span style="font-size:11px;color:var(--muted);">Confidence Band</span></div>
+              </div>
+            </div>
+
+            <!-- Power BI style: Monthly & Quarterly Analysis -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+              <div class="widget">
+                <div class="widget-title" style="border-bottom:2px solid var(--accent);display:inline-block;padding-bottom:4px;">Monthly Analysis</div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;">
+                  <div style="background:var(--light);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">Average</div><div style="font-size:16px;font-weight:700;color:var(--navy);margin-top:4px;">£248</div></div>
+                  <div style="background:var(--light);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">High</div><div style="font-size:16px;font-weight:700;color:var(--navy);margin-top:4px;">£256</div></div>
+                  <div style="background:var(--light);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">Low</div><div style="font-size:16px;font-weight:700;color:var(--navy);margin-top:4px;">£238</div></div>
+                  <div style="background:var(--light);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">Delta</div><div style="font-size:16px;font-weight:700;color:var(--green);margin-top:4px;">+3.2%</div></div>
                 </div>
               </div>
+              <div class="widget">
+                <div class="widget-title" style="border-bottom:2px solid var(--accent);display:inline-block;padding-bottom:4px;">Quarterly Analysis</div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;">
+                  <div style="background:var(--light);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">Q1 Avg</div><div style="font-size:16px;font-weight:700;color:var(--navy);margin-top:4px;">£235</div></div>
+                  <div style="background:var(--light);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">Q2 Avg</div><div style="font-size:16px;font-weight:700;color:var(--navy);margin-top:4px;">£248</div></div>
+                  <div style="background:var(--light);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">QoQ</div><div style="font-size:16px;font-weight:700;color:var(--green);margin-top:4px;">+5.5%</div></div>
+                  <div style="background:var(--light);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">Forecast Q3</div><div style="font-size:16px;font-weight:700;color:var(--navy);margin-top:4px;">£275</div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Annual Analysis (Power BI style) -->
+            <div class="widget">
+              <div class="widget-title" style="border-bottom:2px solid var(--accent);display:inline-block;padding-bottom:4px;">Annual Analysis</div>
+              <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:12px;">
+                <div style="background:var(--light);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">4 Yr Avg</div><div style="font-size:14px;font-weight:700;color:var(--navy);margin-top:4px;">£232</div></div>
+                <div style="background:var(--light);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">2025</div><div style="font-size:14px;font-weight:700;color:var(--navy);margin-top:4px;">£241</div></div>
+                <div style="background:var(--light);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">2026</div><div style="font-size:14px;font-weight:700;color:var(--navy);margin-top:4px;">£248</div></div>
+                <div style="background:var(--light);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">Delta</div><div style="font-size:14px;font-weight:700;color:var(--green);margin-top:4px;">+2.9%</div></div>
+                <div style="background:var(--light);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">2024</div><div style="font-size:14px;font-weight:700;color:var(--navy);margin-top:4px;">£228</div></div>
+                <div style="background:var(--light);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">2025</div><div style="font-size:14px;font-weight:700;color:var(--navy);margin-top:4px;">£241</div></div>
+                <div style="background:var(--light);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">Forecast</div><div style="font-size:14px;font-weight:700;color:var(--green);margin-top:4px;">£275</div></div>
+              </div>
+            </div>
+
+            <!-- Monthly Price Trend (multi-line chart) -->
+            <div class="widget">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                <div class="widget-title" style="margin-bottom:0;">Monthly Price Trend</div>
+                <div style="display:flex;gap:4px;">
+                  <button class="dr-btn active" onclick="setActive(this)">1Y</button>
+                  <button class="dr-btn" onclick="setActive(this)">3Y</button>
+                </div>
+              </div>
+              <div style="font-size:10px;color:var(--muted);margin-bottom:8px;">— India — Indonesia — China — Total — EU — France — Global — India Pack — Central — South America — UAE — EU — US</div>
+              <svg width="100%" height="180" viewBox="0 0 700 180" preserveAspectRatio="none" style="background:#f8fafc;border-radius:8px;display:block;">
+                <line x1="0" y1="36" x2="700" y2="36" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                <line x1="0" y1="72" x2="700" y2="72" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                <line x1="0" y1="108" x2="700" y2="108" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                <line x1="0" y1="144" x2="700" y2="144" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                <!-- Multiple commodity lines -->
+                <polyline points="30,120 90,115 150,108 210,100 270,95 330,88 390,82 450,78 510,72 570,68 630,62 680,58" fill="none" stroke="#1A7FD4" stroke-width="2"/>
+                <polyline points="30,130 90,128 150,125 210,120 270,118 330,115 390,112 450,108 510,105 570,100 630,96 680,92" fill="none" stroke="#22a86b" stroke-width="2"/>
+                <polyline points="30,140 90,138 150,135 210,132 270,130 330,128 390,125 450,122 510,118 570,115 630,112 680,108" fill="none" stroke="#d97706" stroke-width="2"/>
+                <polyline points="30,100 90,105 150,110 210,108 270,102 330,98 390,95 450,90 510,85 570,80 630,75 680,70" fill="none" stroke="#dc2626" stroke-width="2"/>
+                <polyline points="30,145 90,142 150,140 210,138 270,135 330,132 390,130 450,128 510,125 570,122 630,120 680,118" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="4,2"/>
+                <!-- X-axis -->
+                <text x="30" y="172" font-size="9" fill="#9CA3AF">Jun</text>
+                <text x="120" y="172" font-size="9" fill="#9CA3AF">Aug</text>
+                <text x="210" y="172" font-size="9" fill="#9CA3AF">Oct</text>
+                <text x="300" y="172" font-size="9" fill="#9CA3AF">Dec</text>
+                <text x="390" y="172" font-size="9" fill="#9CA3AF">Feb</text>
+                <text x="480" y="172" font-size="9" fill="#9CA3AF">Apr</text>
+                <text x="570" y="172" font-size="9" fill="#9CA3AF">Jun</text>
+                <text x="650" y="172" font-size="9" fill="#9CA3AF">2026</text>
+              </svg>
+            </div>
+
+            <!-- Month-on-Month Price Variation (bar chart) -->
+            <div class="widget">
+              <div class="widget-title" style="border-bottom:2px solid var(--accent);display:inline-block;padding-bottom:4px;">Month-on-Month Price Variation</div>
+              <svg width="100%" height="160" viewBox="0 0 700 160" preserveAspectRatio="none" style="background:#f8fafc;border-radius:8px;display:block;margin-top:12px;">
+                <line x1="0" y1="80" x2="700" y2="80" stroke="#9CA3AF" stroke-width="0.5"/>
+                <!-- Positive bars (red/dark) -->
+                <rect x="30" y="50" width="40" height="30" fill="#991b1b" rx="2"/>
+                <rect x="90" y="55" width="40" height="25" fill="#991b1b" rx="2"/>
+                <rect x="150" y="60" width="40" height="20" fill="#991b1b" rx="2"/>
+                <rect x="210" y="45" width="40" height="35" fill="#991b1b" rx="2"/>
+                <rect x="270" y="40" width="40" height="40" fill="#991b1b" rx="2"/>
+                <rect x="330" y="50" width="40" height="30" fill="#991b1b" rx="2"/>
+                <rect x="390" y="35" width="40" height="45" fill="#991b1b" rx="2"/>
+                <rect x="450" y="42" width="40" height="38" fill="#991b1b" rx="2"/>
+                <rect x="510" y="48" width="40" height="32" fill="#991b1b" rx="2"/>
+                <rect x="570" y="55" width="40" height="25" fill="#991b1b" rx="2"/>
+                <rect x="630" y="52" width="40" height="28" fill="#991b1b" rx="2"/>
+                <!-- Negative bars (green) -->
+                <rect x="30" y="82" width="40" height="15" fill="#065f46" rx="2"/>
+                <rect x="150" y="82" width="40" height="22" fill="#065f46" rx="2"/>
+                <rect x="270" y="82" width="40" height="10" fill="#065f46" rx="2"/>
+                <rect x="450" y="82" width="40" height="18" fill="#065f46" rx="2"/>
+                <!-- % labels -->
+                <text x="40" y="46" font-size="8" fill="#991b1b" font-weight="600">+4%</text>
+                <text x="280" y="36" font-size="8" fill="#991b1b" font-weight="600">+6%</text>
+                <text x="400" y="31" font-size="8" fill="#991b1b" font-weight="600">+7%</text>
+                <!-- X-axis months -->
+                <text x="38" y="150" font-size="9" fill="#9CA3AF">Jun</text>
+                <text x="98" y="150" font-size="9" fill="#9CA3AF">Jul</text>
+                <text x="158" y="150" font-size="9" fill="#9CA3AF">Aug</text>
+                <text x="218" y="150" font-size="9" fill="#9CA3AF">Sep</text>
+                <text x="278" y="150" font-size="9" fill="#9CA3AF">Oct</text>
+                <text x="338" y="150" font-size="9" fill="#9CA3AF">Nov</text>
+                <text x="398" y="150" font-size="9" fill="#9CA3AF">Dec</text>
+                <text x="458" y="150" font-size="9" fill="#9CA3AF">Jan</text>
+                <text x="518" y="150" font-size="9" fill="#9CA3AF">Feb</text>
+                <text x="578" y="150" font-size="9" fill="#9CA3AF">Mar</text>
+                <text x="638" y="150" font-size="9" fill="#9CA3AF">Apr</text>
+              </svg>
+            </div>
+
+            <!-- Quarterly Price Trend (multi-line chart) -->
+            <div class="widget">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                <div class="widget-title" style="margin-bottom:0;">Quarterly Price Trend</div>
+                <div style="display:flex;gap:4px;">
+                  <button class="dr-btn active" onclick="setActive(this)">1Y</button>
+                  <button class="dr-btn" onclick="setActive(this)">3Y</button>
+                </div>
+              </div>
+              <svg width="100%" height="160" viewBox="0 0 700 160" preserveAspectRatio="none" style="background:#f8fafc;border-radius:8px;display:block;">
+                <line x1="0" y1="32" x2="700" y2="32" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                <line x1="0" y1="64" x2="700" y2="64" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                <line x1="0" y1="96" x2="700" y2="96" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                <line x1="0" y1="128" x2="700" y2="128" stroke="#e5e7eb" stroke-dasharray="4,4"/>
+                <polyline points="50,110 175,100 300,88 425,75 550,65 650,55" fill="none" stroke="#1A7FD4" stroke-width="2.5"/>
+                <polyline points="50,120 175,115 300,108 425,100 550,92 650,85" fill="none" stroke="#22a86b" stroke-width="2"/>
+                <polyline points="50,125 175,122 300,118 425,112 550,108 650,102" fill="none" stroke="#d97706" stroke-width="2"/>
+                <polyline points="50,90 175,95 300,85 425,78 550,70 650,62" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,2"/>
+                <text x="50" y="150" font-size="9" fill="#9CA3AF">Q1 25</text>
+                <text x="175" y="150" font-size="9" fill="#9CA3AF">Q2 25</text>
+                <text x="300" y="150" font-size="9" fill="#9CA3AF">Q3 25</text>
+                <text x="425" y="150" font-size="9" fill="#9CA3AF">Q4 25</text>
+                <text x="550" y="150" font-size="9" fill="#9CA3AF">Q1 26</text>
+                <text x="650" y="150" font-size="9" fill="#9CA3AF">Q2 26</text>
+              </svg>
+            </div>
+
+            <!-- Quarter-on-Quarter Price Variation (bar chart) -->
+            <div class="widget">
+              <div class="widget-title" style="border-bottom:2px solid var(--accent);display:inline-block;padding-bottom:4px;">Quarter-on-Quarter Price Variation</div>
+              <svg width="100%" height="140" viewBox="0 0 700 140" preserveAspectRatio="none" style="background:#f8fafc;border-radius:8px;display:block;margin-top:12px;">
+                <line x1="0" y1="70" x2="700" y2="70" stroke="#9CA3AF" stroke-width="0.5"/>
+                <!-- Q bars -->
+                <rect x="60" y="35" width="60" height="35" fill="#991b1b" rx="3"/>
+                <rect x="180" y="40" width="60" height="30" fill="#991b1b" rx="3"/>
+                <rect x="300" y="30" width="60" height="40" fill="#991b1b" rx="3"/>
+                <rect x="420" y="45" width="60" height="25" fill="#991b1b" rx="3"/>
+                <rect x="540" y="38" width="60" height="32" fill="#991b1b" rx="3"/>
+                <!-- Negative -->
+                <rect x="60" y="72" width="60" height="12" fill="#065f46" rx="3"/>
+                <rect x="300" y="72" width="60" height="18" fill="#065f46" rx="3"/>
+                <!-- Labels -->
+                <text x="75" y="28" font-size="9" fill="#991b1b" font-weight="600">+5.2%</text>
+                <text x="195" y="36" font-size="9" fill="#991b1b" font-weight="600">+4.1%</text>
+                <text x="315" y="26" font-size="9" fill="#991b1b" font-weight="600">+6.8%</text>
+                <text x="435" y="40" font-size="9" fill="#991b1b" font-weight="600">+3.5%</text>
+                <text x="555" y="34" font-size="9" fill="#991b1b" font-weight="600">+5.5%</text>
+                <!-- X-axis -->
+                <text x="72" y="130" font-size="9" fill="#9CA3AF">Q1 25</text>
+                <text x="192" y="130" font-size="9" fill="#9CA3AF">Q2 25</text>
+                <text x="312" y="130" font-size="9" fill="#9CA3AF">Q3 25</text>
+                <text x="432" y="130" font-size="9" fill="#9CA3AF">Q4 25</text>
+                <text x="552" y="130" font-size="9" fill="#9CA3AF">Q1 26</text>
+              </svg>
+            </div>
+
+            <!-- Qualitative Pricing Insights (existing Price Drivers data) -->
+            <div class="widget">
+              <div class="widget-title">Qualitative Pricing Insights</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div>
+                  <div class="driver-row"><span class="driver-name">Supply</span><span class="driver-status ds-tight">Tight</span><span class="driver-trend">▼ Tightening</span></div>
+                  <div class="driver-row"><span class="driver-name">Demand</span><span class="driver-status ds-high">High</span><span class="driver-trend">▲ Increasing</span></div>
+                  <div class="driver-row"><span class="driver-name">Weather</span><span class="driver-status ds-alert">Alert ⚠</span><span class="driver-trend">▲ Adverse</span></div>
+                  <div class="driver-row"><span class="driver-name">Trade Policy</span><span class="driver-status ds-mod">Moderate</span><span class="driver-trend">■ Stable</span></div>
+                </div>
+                <div>
+                  <div class="driver-row"><span class="driver-name">Political Risk</span><span class="driver-status ds-mod">Moderate</span><span class="driver-trend">■ Stable</span></div>
+                  <div class="driver-row"><span class="driver-name">Currency USD</span><span class="driver-status ds-weak">Weak</span><span class="driver-trend">▼ Weakening</span></div>
+                  <div class="driver-row"><span class="driver-name">Energy Cost</span><span class="driver-status ds-elev">Elevated</span><span class="driver-trend">■ Stable</span></div>
+                  <div class="driver-row"><span class="driver-name">Interest Rates</span><span class="driver-status ds-rise">Rising</span><span class="driver-trend">▲ Increasing</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Analyst Commentary -->
+            <div class="widget">
+              <div class="widget-title">Analyst Commentary</div>
+              <div style="font-size:13px;line-height:1.7;color:var(--text);">
+                <p>Black Sea supply disruption continues to exert upward pressure. USDA data points to tighter global S&D balance through Q3. Currency weakness in USD provides additional tailwind for GBP-denominated buyers.</p>
+                <p style="margin-top:10px;">Energy costs remain elevated but stable. Weather alerts in key growing regions add uncertainty to harvest projections.</p>
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-top:10px;">Last updated: 5 May 2026 · Sarah T., Senior Analyst</div>
             </div>
           </div>
 
@@ -3778,6 +4260,69 @@
                     "
                   ></div>
                   Current month
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Z-Score Model Tab (replaces Supply & Demand) -->
+          <div id="comm-zscore" style="display: none">
+            <div class="widget">
+              <div class="widget-title">Z-Score Forecasting Model</div>
+              <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">The Z-scoring model evaluates price deviations from historical means to generate forecast signals.</p>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;">
+                <div style="background:var(--light);border-radius:10px;padding:16px;text-align:center;">
+                  <div style="font-size:28px;font-weight:800;color:var(--green);">+1.84</div>
+                  <div style="font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:600;margin-top:4px;">Current Z-Score</div>
+                </div>
+                <div style="background:var(--light);border-radius:10px;padding:16px;text-align:center;">
+                  <div style="font-size:28px;font-weight:800;color:var(--navy);">82%</div>
+                  <div style="font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:600;margin-top:4px;">Model Confidence</div>
+                </div>
+                <div style="background:var(--light);border-radius:10px;padding:16px;text-align:center;">
+                  <div style="font-size:28px;font-weight:800;color:var(--navy);">88%</div>
+                  <div style="font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:600;margin-top:4px;">Directional Accuracy</div>
+                </div>
+              </div>
+              <div class="separator"></div>
+              <div class="section-title">Methodology</div>
+              <div style="font-size:13px;line-height:1.7;color:var(--text);">
+                <p><strong>Formula:</strong> Z = (Current Price - μ) / σ</p>
+                <p style="margin-top:8px;"><strong>Thresholds:</strong> Z > +1.5 → Full | Z +0.5 to +1.5 → Partial | Z -0.5 to +0.5 → Plan | Z &lt; -0.5 → Avoid</p>
+              </div>
+              <div class="separator"></div>
+              <div class="section-title">Scenario Analysis</div>
+              <table class="scenario-table">
+                <tr><th>Scenario</th><th>3M Price</th><th>6M Price</th><th>12M Price</th><th>Probability</th></tr>
+                <tr><td style="font-weight:600">🐂 Bull</td><td class="sc-bull">£285</td><td class="sc-bull">£310</td><td class="sc-bull">£340</td><td><span style="background:#d1fae5;color:#065f46;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;">20%</span></td></tr>
+                <tr><td style="font-weight:600">📊 Base</td><td class="sc-base">£262</td><td class="sc-base">£275</td><td class="sc-base">£290</td><td><span style="background:#dbeafe;color:#1e40af;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;">55%</span></td></tr>
+                <tr><td style="font-weight:600">🐻 Bear</td><td class="sc-bear">£238</td><td class="sc-bear">£225</td><td class="sc-bear">£210</td><td><span style="background:#fee2e2;color:#991b1b;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;">25%</span></td></tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Hedging Recommendations Tab (replaces Seasonal Patterns & Key Facts) -->
+          <div id="comm-hedging" style="display: none">
+            <div class="widget">
+              <div class="widget-title">Hedging Recommendations</div>
+              <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Database-driven recommendations based on forecast time series. Phases: <strong>Avoid</strong>, <strong>Plan</strong>, <strong>Partial</strong>, <strong>Full</strong>.</p>
+              <div class="hedging-badge hb-full" style="margin-bottom:16px;">✅ FULL — Confirmed buy signal: hedge full volume recommended</div>
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <div style="background:#fff;border:1px solid var(--border);border-left:4px solid var(--green);border-radius:12px;padding:16px;">
+                  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;"><div><div style="font-size:14px;font-weight:700;color:var(--navy);">Wheat (UK Feed)</div><div style="font-size:12px;color:var(--muted);">6M · Z: +1.84</div></div><span style="background:#d1fae5;color:#065f46;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;">✅ FULL</span></div>
+                  <div style="font-size:13px;color:var(--text);margin-top:10px;line-height:1.6;">Black Sea disruption + tightening S&D. Recommend locking in forward rates.</div>
+                </div>
+                <div style="background:#fff;border:1px solid var(--border);border-left:4px solid var(--red);border-radius:12px;padding:16px;">
+                  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;"><div><div style="font-size:14px;font-weight:700;color:var(--navy);">Palm Oil</div><div style="font-size:12px;color:var(--muted);">6M · Z: -0.92</div></div><span style="background:#fee2e2;color:#991b1b;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;">⛔ AVOID</span></div>
+                  <div style="font-size:13px;color:var(--text);margin-top:10px;line-height:1.6;">Bearish momentum. Defer hedging — spot buying preferred.</div>
+                </div>
+                <div style="background:#fff;border:1px solid var(--border);border-left:4px solid var(--amber);border-radius:12px;padding:16px;">
+                  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;"><div><div style="font-size:14px;font-weight:700;color:var(--navy);">Cocoa (ICCO)</div><div style="font-size:12px;color:var(--muted);">6M · Z: +1.12</div></div><span style="background:#fef9c3;color:#713f12;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;">⚡ PARTIAL</span></div>
+                  <div style="font-size:13px;color:var(--text);margin-top:10px;line-height:1.6;">Uptrend intact but volatile. Recommend 50% forward cover.</div>
+                </div>
+                <div style="background:#fff;border:1px solid var(--border);border-left:4px solid var(--green);border-radius:12px;padding:16px;">
+                  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;"><div><div style="font-size:14px;font-weight:700;color:var(--navy);">Brent Crude</div><div style="font-size:12px;color:var(--muted);">6M · Z: +1.56</div></div><span style="background:#d1fae5;color:#065f46;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;">✅ FULL</span></div>
+                  <div style="font-size:13px;color:var(--text);margin-top:10px;line-height:1.6;">OPEC+ cuts confirmed. Full forward cover recommended.</div>
                 </div>
               </div>
             </div>
@@ -4742,6 +5287,8 @@
           "comm-news",
           "comm-facts",
           "comm-seasonal",
+          "comm-zscore",
+          "comm-hedging",
         ];
         tabs.forEach((t) => {
           const el = document.getElementById(t);
@@ -4754,6 +5301,20 @@
       function toggleAlgoCore() {
         showToast("Toggling forecast model overlay");
       }
+
+      function toggleProfilePanel() {
+        const panel = document.getElementById('profile-panel');
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+      }
+
+      // Close profile panel when clicking outside
+      document.addEventListener('click', function(e) {
+        const panel = document.getElementById('profile-panel');
+        const avatar = document.querySelector('.avatar');
+        if (panel && panel.style.display === 'block' && !panel.contains(e.target) && !avatar.contains(e.target)) {
+          panel.style.display = 'none';
+        }
+      });
     </script>
   </body>
 </html>

@@ -422,28 +422,217 @@
       }
       .heatmap {
         display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 4px;
+        grid-template-columns: repeat(24, minmax(0, 1fr));
+        grid-auto-rows: 44px;
+        grid-auto-flow: dense;
+        gap: 1px;
+        align-items: stretch;
+        background: #ffffff;
+        border: 1px solid #ffffff;
+        border-radius: 6px;
+        overflow: visible;
+      }
+      .heat-scale {
+        display: grid;
+        grid-template-columns: 30px minmax(120px, 500px) 30px;
+        align-items: center;
+        gap: 8px;
+        margin: -2px 0 12px;
+        color: #475569;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .heat-scale-bar {
+        height: 12px;
+        border-radius: 2px;
+        background: linear-gradient(
+          90deg,
+          #ed0000 0%,
+          #ff444b 20%,
+          #ff8f91 38%,
+          #c9d7d1 50%,
+          #18dc83 62%,
+          #10bd68 80%,
+          #00984f 100%
+        );
       }
       .heat-cell {
-        border-radius: 6px;
-        padding: 8px 4px;
-        text-align: center;
-        font-size: 10px;
+        position: relative;
+        min-width: 0;
+        min-height: 0;
+        border-radius: 3px;
+        padding: 7px 8px;
         font-weight: 600;
         cursor: pointer;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        overflow: hidden;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.18);
+        transition:
+          filter 0.15s ease,
+          transform 0.15s ease;
+      }
+      .heat-cell:hover {
+        overflow: visible;
+        filter: brightness(1.05);
+        transform: translateY(-1px);
+        z-index: 5;
+      }
+      .heat-name {
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        font-size: 12px;
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+      }
+      .heat-meta {
+        display: flex;
+        width: 100%;
+        align-items: end;
+        justify-content: space-between;
+        gap: 6px;
+        line-height: 1;
+      }
+      .heat-change {
+        display: block;
+        margin-top: 0;
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .heat-volume {
+        display: block;
+        font-size: 10px;
+        font-weight: 700;
+        opacity: 0.82;
+        white-space: nowrap;
+      }
+      .heat-cell.is-compact .heat-volume {
+        display: none;
+      }
+      .heat-cell.is-large {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .heat-cell.is-large .heat-name {
+        font-size: 18px;
+      }
+      .heat-cell.is-large .heat-change {
+        margin-top: 8px;
+        font-size: 16px;
+      }
+      .heat-cell.is-medium {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .heat-cell.is-medium .heat-name {
+        font-size: 14px;
+      }
+      .heat-cell.is-medium .heat-change {
+        margin-top: 5px;
+        font-size: 14px;
+      }
+      .heat-hover {
+        display: block;
+        position: absolute;
+        left: calc(100% + 8px);
+        top: 50%;
+        width: 190px;
+        padding: 12px;
+        background: #fff;
+        color: #26313d;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+        text-shadow: none;
+        opacity: 0;
+        pointer-events: none;
+        transform: translate(-6px, -50%);
+        transition:
+          opacity 0.12s ease,
+          transform 0.12s ease;
+      }
+      .heat-cell:hover .heat-hover {
+        opacity: 1;
+        transform: translate(0, -50%);
+      }
+      .heat-hover-title {
+        display: block;
+        color: #0b75bd;
+        font-size: 14px;
+        font-weight: 800;
+        margin-bottom: 3px;
+      }
+      .heat-hover-sub {
+        display: block;
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
+      .heat-hover-row {
+        display: grid;
+        grid-template-columns: 62px 1fr;
+        gap: 10px;
+        font-size: 12px;
+        line-height: 1.55;
+      }
+      .heat-hover-row strong {
+        font-weight: 700;
       }
       .h-up {
-        background: #fde8e8;
-        color: #991b1b;
+        background: #16a34a;
       }
       .h-dn {
-        background: #d1fae5;
-        color: #065f46;
+        background: #dc2626;
       }
-      .h-neu {
-        background: #f3f4f6;
-        color: #374151;
+      .h-flat {
+        background: #c9d7d1;
+        color: #24313d;
+        text-shadow: none;
+      }
+      @media (max-width: 900px) {
+        .heatmap {
+          grid-template-columns: repeat(12, minmax(0, 1fr));
+          grid-auto-rows: 42px;
+        }
+        .heat-scale {
+          grid-template-columns: 28px minmax(100px, 1fr) 28px;
+        }
+      }
+      @media (max-width: 640px) {
+        .heatmap {
+          grid-template-columns: repeat(6, minmax(0, 1fr));
+          grid-auto-rows: 40px;
+        }
+        .heat-cell {
+          padding: 7px;
+        }
+        .heat-name {
+          font-size: 11px;
+        }
+        .heat-change {
+          font-size: 12px;
+        }
+        .heat-cell.is-large .heat-name,
+        .heat-cell.is-medium .heat-name {
+          font-size: 12px;
+        }
+        .heat-cell.is-large .heat-change,
+        .heat-cell.is-medium .heat-change {
+          font-size: 12px;
+          margin-top: 3px;
+        }
+        .heat-hover {
+          display: none;
+        }
       }
       .mover-row {
         display: flex;
@@ -1644,6 +1833,24 @@
           Reports
         </button>
         <div class="nav-right">
+          <select
+            style="
+              background: rgba(255, 255, 255, 0.1);
+              color: #fff;
+              border: 1px solid rgba(255, 255, 255, 0.2);
+              border-radius: 6px;
+              padding: 4px 8px;
+              font-size: 13px;
+              margin-right: 8px;
+              outline: none;
+              cursor: pointer;
+            "
+          >
+            <option style="color: #0f172a" value="GBP">GBP (£)</option>
+            <option style="color: #0f172a" value="USD">USD ($)</option>
+            <option style="color: #0f172a" value="EUR">EUR (€)</option>
+            <option style="color: #0f172a" value="INR">INR (₹)</option>
+          </select>
           <button
             class="bell-btn"
             style="
@@ -1823,20 +2030,20 @@
         <div class="page-content">
           <div class="page-header">
             <div>
-              <div class="page-title">Good morning, James 👋</div>
+              <div class="page-title">Dashboard Overview</div>
               <div
                 style="font-size: 13px; color: var(--muted); margin-top: 2px"
               >
-                Wednesday, 7 May 2026 · 1,247 commodities tracked
+                Wednesday, 7 May 2026
               </div>
             </div>
             <div style="display: flex; gap: 8px; align-items: center">
               <div class="date-range-strip">
                 <button class="dr-btn">1W</button
                 ><button class="dr-btn active">1M</button
-                ><button class="dr-btn">3M</button
-                ><button class="dr-btn">6M</button
-                ><button class="dr-btn">1Y</button
+                ><button class="dr-btn">Quarter</button
+                ><button class="dr-btn">Half Year</button
+                ><button class="dr-btn">Full Year</button
                 ><button class="dr-btn">Custom</button>
               </div>
               <button
@@ -1848,142 +2055,126 @@
             </div>
           </div>
 
-          <div class="kpi-strip">
-            <div class="kpi-card">
-              <div class="kpi-label">Commodities Tracked</div>
-              <div class="kpi-val">1,247</div>
-              <div class="kpi-sub kpi-up">▲ 12 added this week</div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-label">Active Price Alerts</div>
-              <div class="kpi-val">34</div>
-              <div class="kpi-sub kpi-dn">▲ 3 triggered today</div>
-            </div>
-            <div class="kpi-card">
+          <div class="kpi-strip" style="display: flex">
+            <div class="kpi-card" style="width: 280px">
               <div class="kpi-label">Avg Price Change</div>
               <div class="kpi-val kpi-dn">+2.1%</div>
               <div class="kpi-sub" style="color: var(--muted)">
                 vs last month
               </div>
             </div>
-            <div class="kpi-card">
-              <div class="kpi-label">Budget Variance</div>
-              <div class="kpi-val kpi-up">-£42k</div>
-              <div class="kpi-sub kpi-up">Below forecast ✓</div>
-            </div>
           </div>
 
-          <div class="dashboard-grid" style="margin-bottom: 16px">
-            <div class="widget">
+          <div style="margin-bottom: 16px">
+            <div class="widget" style="width: 100%">
               <div class="widget-title">Price Movement Heatmap</div>
-              <div class="heatmap">
-                <div class="heat-cell h-up" onclick="showScreen('commodities')">
-                  Wheat<br />+3.2%
-                </div>
-                <div class="heat-cell h-dn" onclick="showScreen('commodities')">
-                  Palm Oil<br />-1.8%
-                </div>
-                <div class="heat-cell h-up" onclick="showScreen('commodities')">
-                  Cocoa<br />+5.4%
-                </div>
-                <div class="heat-cell h-dn" onclick="showScreen('commodities')">
-                  Sugar<br />-0.9%
-                </div>
-                <div class="heat-cell h-up" onclick="showScreen('commodities')">
-                  Alum.<br />+1.1%
-                </div>
-                <div
-                  class="heat-cell h-neu"
-                  onclick="showScreen('commodities')"
-                >
-                  Steel<br />0.0%
-                </div>
-                <div class="heat-cell h-up" onclick="showScreen('commodities')">
-                  Crude<br />+2.3%
-                </div>
-                <div class="heat-cell h-dn" onclick="showScreen('commodities')">
-                  Gas<br />-4.1%
-                </div>
-                <div class="heat-cell h-up" onclick="showScreen('commodities')">
-                  Copper<br />+0.8%
-                </div>
-                <div class="heat-cell h-dn" onclick="showScreen('commodities')">
-                  Lumber<br />-2.2%
-                </div>
-                <div
-                  class="heat-cell h-neu"
-                  onclick="showScreen('commodities')"
-                >
-                  Coffee<br />+0.2%
-                </div>
-                <div class="heat-cell h-up" onclick="showScreen('commodities')">
-                  Cotton<br />+1.7%
-                </div>
+              <div class="heat-scale">
+                <span>-6%</span>
+                <span class="heat-scale-bar" aria-hidden="true"></span>
+                <span>6%</span>
               </div>
-            </div>
-            <div class="widget">
-              <div class="widget-title">Top Movers Today</div>
-              <div class="mover-row">
-                <span class="mover-name">Cocoa (ICCO)</span
-                ><svg class="mover-spark" viewBox="0 0 60 24">
-                  <polyline
-                    points="0,20 10,15 20,18 30,10 40,8 50,4 60,3"
-                    fill="none"
-                    stroke="#22a86b"
-                    stroke-width="2"
-                  /></svg
-                ><span class="mover-val kpi-up">+5.4%</span>
-              </div>
-              <div class="mover-row">
-                <span class="mover-name">Natural Gas</span
-                ><svg class="mover-spark" viewBox="0 0 60 24">
-                  <polyline
-                    points="0,4 10,6 20,8 30,12 40,16 50,18 60,21"
-                    fill="none"
-                    stroke="#e0433a"
-                    stroke-width="2"
-                  /></svg
-                ><span class="mover-val kpi-dn">-4.1%</span>
-              </div>
-              <div class="mover-row">
-                <span class="mover-name">Brent Crude</span
-                ><svg class="mover-spark" viewBox="0 0 60 24">
-                  <polyline
-                    points="0,18 10,16 20,14 30,12 40,10 50,8 60,6"
-                    fill="none"
-                    stroke="#22a86b"
-                    stroke-width="2"
-                  /></svg
-                ><span class="mover-val kpi-up">+2.3%</span>
-              </div>
-              <div class="mover-row">
-                <span class="mover-name">Wheat (UK Feed)</span
-                ><svg class="mover-spark" viewBox="0 0 60 24">
-                  <polyline
-                    points="0,16 10,14 20,16 30,11 40,12 50,9 60,8"
-                    fill="none"
-                    stroke="#22a86b"
-                    stroke-width="2"
-                  /></svg
-                ><span class="mover-val kpi-up">+3.2%</span>
-              </div>
-              <div class="mover-row">
-                <span class="mover-name">Lumber</span
-                ><svg class="mover-spark" viewBox="0 0 60 24">
-                  <polyline
-                    points="0,6 10,8 20,10 30,14 40,16 50,18 60,20"
-                    fill="none"
-                    stroke="#e0433a"
-                    stroke-width="2"
-                  /></svg
-                ><span class="mover-val kpi-dn">-2.2%</span>
-              </div>
+              <div id="dynamic-heatmap" class="heatmap"></div>
             </div>
           </div>
 
           <div class="dashboard-grid" style="margin-bottom: 16px">
             <div class="widget">
-              <div class="widget-title">My Watchlist</div>
+              <div class="widget-title">Positive Movers Today</div>
+              <div
+                style="max-height: 200px; overflow-y: auto; padding-right: 8px"
+              >
+                <div class="mover-row">
+                  <span class="mover-name">Cocoa (ICCO)</span>
+                  <svg class="mover-spark" viewBox="0 0 60 24">
+                    <polyline
+                      points="0,20 10,15 20,18 30,10 40,8 50,4 60,3"
+                      fill="none"
+                      stroke="#22a86b"
+                      stroke-width="2"
+                    /></svg
+                  ><span class="mover-val kpi-up">+5.4%</span>
+                </div>
+                <div class="mover-row">
+                  <span class="mover-name">Wheat (UK Feed)</span>
+                  <svg class="mover-spark" viewBox="0 0 60 24">
+                    <polyline
+                      points="0,16 10,14 20,16 30,11 40,12 50,9 60,8"
+                      fill="none"
+                      stroke="#22a86b"
+                      stroke-width="2"
+                    /></svg
+                  ><span class="mover-val kpi-up">+3.2%</span>
+                </div>
+                <div class="mover-row">
+                  <span class="mover-name">Brent Crude</span>
+                  <svg class="mover-spark" viewBox="0 0 60 24">
+                    <polyline
+                      points="0,18 10,16 20,14 30,12 40,10 50,8 60,6"
+                      fill="none"
+                      stroke="#22a86b"
+                      stroke-width="2"
+                    /></svg
+                  ><span class="mover-val kpi-up">+2.3%</span>
+                </div>
+              </div>
+            </div>
+            <div class="widget">
+              <div class="widget-title">Negative Movers Today</div>
+              <div
+                style="max-height: 200px; overflow-y: auto; padding-right: 8px"
+              >
+                <div class="mover-row">
+                  <span class="mover-name">Natural Gas</span>
+                  <svg class="mover-spark" viewBox="0 0 60 24">
+                    <polyline
+                      points="0,4 10,6 20,8 30,12 40,16 50,18 60,21"
+                      fill="none"
+                      stroke="#e0433a"
+                      stroke-width="2"
+                    /></svg
+                  ><span class="mover-val kpi-dn">-4.1%</span>
+                </div>
+                <div class="mover-row">
+                  <span class="mover-name">Lumber</span>
+                  <svg class="mover-spark" viewBox="0 0 60 24">
+                    <polyline
+                      points="0,6 10,8 20,10 30,14 40,16 50,18 60,20"
+                      fill="none"
+                      stroke="#e0433a"
+                      stroke-width="2"
+                    /></svg
+                  ><span class="mover-val kpi-dn">-2.2%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="widget">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 14px;
+                "
+              >
+                <div class="widget-title" style="margin-bottom: 0">
+                  My Watchlist
+                </div>
+                <input
+                  type="date"
+                  style="
+                    padding: 4px 8px;
+                    font-size: 11px;
+                    border: 1px solid var(--border);
+                    border-radius: 4px;
+                    width: auto;
+                    outline: none;
+                  "
+                  onchange="showToast('Watchlist updated for ' + this.value)"
+                />
+              </div>
               <div class="watchlist-card">
                 <div class="wl-item">
                   <div class="wl-name">Wheat (UK Feed)</div>
@@ -2007,38 +2198,7 @@
                 </div>
               </div>
             </div>
-            <div class="widget">
-              <div class="widget-title">Forecast Signals</div>
-              <div class="signal-list">
-                <div class="signal-row">
-                  <span style="font-size: 13px; font-weight: 500"
-                    >Wheat (UK Feed)</span
-                  ><span class="signal-badge sb-bull">Bullish ▲</span>
-                </div>
-                <div class="signal-row">
-                  <span style="font-size: 13px; font-weight: 500">Palm Oil</span
-                  ><span class="signal-badge sb-bear">Bearish ▼</span>
-                </div>
-                <div class="signal-row">
-                  <span style="font-size: 13px; font-weight: 500"
-                    >Brent Crude</span
-                  ><span class="signal-badge sb-bull">Bullish ▲</span>
-                </div>
-                <div class="signal-row">
-                  <span style="font-size: 13px; font-weight: 500"
-                    >Cocoa (ICCO)</span
-                  ><span class="signal-badge sb-bull">Bullish ▲</span>
-                </div>
-                <div class="signal-row">
-                  <span style="font-size: 13px; font-weight: 500"
-                    >Natural Gas</span
-                  ><span class="signal-badge sb-bear">Bearish ▼</span>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <div class="dashboard-grid">
             <div class="widget">
               <div class="widget-title">News & Market Intel</div>
               <div class="news-feed">
@@ -2072,91 +2232,6 @@
                     disappoint
                   </div>
                   <div class="news-time">Yesterday · Mintec</div>
-                </div>
-              </div>
-            </div>
-            <div class="widget">
-              <div class="widget-title">Budget Impact Tracker</div>
-              <div class="donut-wrap">
-                <svg width="120" height="120" viewBox="0 0 120 120">
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="42"
-                    fill="none"
-                    stroke="#e5e7eb"
-                    stroke-width="18"
-                  />
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="42"
-                    fill="none"
-                    stroke="#1A7FD4"
-                    stroke-width="18"
-                    stroke-dasharray="105 159"
-                    stroke-dashoffset="-39"
-                    stroke-linecap="round"
-                  />
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="42"
-                    fill="none"
-                    stroke="#22a86b"
-                    stroke-width="18"
-                    stroke-dasharray="53 211"
-                    stroke-dashoffset="-144"
-                    stroke-linecap="round"
-                  />
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="42"
-                    fill="none"
-                    stroke="#d97706"
-                    stroke-width="18"
-                    stroke-dasharray="40 224"
-                    stroke-dashoffset="-197"
-                    stroke-linecap="round"
-                  />
-                  <text
-                    x="60"
-                    y="57"
-                    text-anchor="middle"
-                    font-size="13"
-                    font-weight="700"
-                    fill="#0B1E3D"
-                  >
-                    -£42k
-                  </text>
-                  <text
-                    x="60"
-                    y="70"
-                    text-anchor="middle"
-                    font-size="9"
-                    fill="#6B7280"
-                  >
-                    budget variance
-                  </text>
-                </svg>
-                <div class="donut-legend">
-                  <div class="legend-item">
-                    <div class="legend-dot" style="background: #1a7fd4"></div>
-                    <span style="font-size: 12px">Agri-Food 41%</span>
-                  </div>
-                  <div class="legend-item">
-                    <div class="legend-dot" style="background: #22a86b"></div>
-                    <span style="font-size: 12px">Energy 21%</span>
-                  </div>
-                  <div class="legend-item">
-                    <div class="legend-dot" style="background: #d97706"></div>
-                    <span style="font-size: 12px">Packaging 16%</span>
-                  </div>
-                  <div class="legend-item">
-                    <div class="legend-dot" style="background: #e5e7eb"></div>
-                    <span style="font-size: 12px">Metals 22%</span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -2202,8 +2277,13 @@
               <button class="tb-btn active" onclick="setActive(this)">
                 1M
               </button>
-              <button class="tb-btn" onclick="setActive(this)">3M</button>
-              <button class="tb-btn" onclick="setActive(this)">1Y</button>
+              <button class="tb-btn" onclick="setActive(this)">Quarter</button>
+              <button class="tb-btn" onclick="setActive(this)">
+                Half Year
+              </button>
+              <button class="tb-btn" onclick="setActive(this)">
+                Full Year
+              </button>
               <button class="tb-btn" onclick="setActive(this)">5Y</button>
             </div>
             <div class="toolbar-group">
@@ -2607,16 +2687,16 @@
                   <div style="display: flex; gap: 6px">
                     <div class="horizon-tabs">
                       <button class="horizon-tab" onclick="setHorizon(this)">
-                        3M
+                        Quarter
                       </button>
                       <button
                         class="horizon-tab active"
                         onclick="setHorizon(this)"
                       >
-                        6M
+                        Half Year
                       </button>
                       <button class="horizon-tab" onclick="setHorizon(this)">
-                        12M
+                        Full Year
                       </button>
                       <button class="horizon-tab" onclick="setHorizon(this)">
                         24M
@@ -3315,8 +3395,15 @@
                 <button class="tb-btn active" onclick="setActive(this)">
                   1M
                 </button>
-                <button class="tb-btn" onclick="setActive(this)">3M</button>
-                <button class="tb-btn" onclick="setActive(this)">1Y</button>
+                <button class="tb-btn" onclick="setActive(this)">
+                  Quarter
+                </button>
+                <button class="tb-btn" onclick="setActive(this)">
+                  Half Year
+                </button>
+                <button class="tb-btn" onclick="setActive(this)">
+                  Full Year
+                </button>
                 <button class="tb-btn" onclick="setActive(this)">5Y</button>
               </div>
               <div class="toolbar-group">
@@ -5301,6 +5388,185 @@
       function toggleAlgoCore() {
         showToast("Toggling forecast model overlay");
       }
+
+      function renderHeatmap() {
+        const heatmapData = [
+          {
+            name: "WHEAT",
+            company: "UK Feed Wheat",
+            price: 218.4,
+            change: 3.2,
+            volume: 1.2,
+          },
+          {
+            name: "PALM",
+            company: "Palm Oil",
+            price: 920.1,
+            change: -1.8,
+            volume: 0.9,
+          },
+          {
+            name: "COCOA",
+            company: "ICCO Cocoa",
+            price: 8530.0,
+            change: 5.4,
+            volume: 1.5,
+          },
+          {
+            name: "SUGAR",
+            company: "Raw Sugar",
+            price: 19.22,
+            change: -0.9,
+            volume: 0.8,
+          },
+          {
+            name: "ALUM",
+            company: "Aluminium",
+            price: 2568.7,
+            change: 1.1,
+            volume: 1.1,
+          },
+          {
+            name: "STEEL",
+            company: "Hot Rolled Steel",
+            price: 692.0,
+            change: 0.0,
+            volume: 1.0,
+          },
+          {
+            name: "CRUDE",
+            company: "Brent Crude",
+            price: 84.7,
+            change: 2.3,
+            volume: 1.3,
+          },
+          {
+            name: "GAS",
+            company: "Natural Gas",
+            price: 2.41,
+            change: -4.1,
+            volume: 1.4,
+          },
+          {
+            name: "COPPER",
+            company: "LME Copper",
+            price: 9825.2,
+            change: 0.8,
+            volume: 1.1,
+          },
+          {
+            name: "LUMBER",
+            company: "Lumber Futures",
+            price: 529.4,
+            change: -2.2,
+            volume: 0.9,
+          },
+          {
+            name: "COFFEE",
+            company: "Arabica Coffee",
+            price: 221.8,
+            change: 0.2,
+            volume: 0.7,
+          },
+          {
+            name: "COTTON",
+            company: "Cotton No. 2",
+            price: 78.6,
+            change: 1.7,
+            volume: 1.0,
+          },
+        ];
+
+        const container = document.getElementById("dynamic-heatmap");
+        if (!container) return;
+        container.innerHTML = "";
+
+        const maxDelta = Math.max(
+          ...heatmapData.map((item) => Math.abs(item.change)),
+        );
+        const maxVolume = Math.max(...heatmapData.map((item) => item.volume));
+
+        const tilePattern = [
+          { cols: 10, rows: 3, scale: "is-large" },
+          { cols: 7, rows: 3, scale: "is-large" },
+          { cols: 7, rows: 3, scale: "is-large" },
+          { cols: 10, rows: 2, scale: "is-large" },
+          { cols: 7, rows: 2, scale: "is-medium" },
+          { cols: 7, rows: 2, scale: "is-medium" },
+          { cols: 5, rows: 2, scale: "is-medium" },
+          { cols: 4, rows: 2, scale: "is-medium" },
+          { cols: 4, rows: 1, scale: "" },
+          { cols: 3, rows: 1, scale: "is-compact" },
+          { cols: 3, rows: 1, scale: "is-compact" },
+          { cols: 3, rows: 1, scale: "is-compact" },
+        ];
+
+        [...heatmapData]
+          .sort((a, b) => {
+            const score = (item) =>
+              (item.volume / maxVolume) * 0.55 +
+              (Math.abs(item.change) / maxDelta) * 0.45;
+            return score(b) - score(a);
+          })
+          .forEach((item, index) => {
+            const el = document.createElement("div");
+            el.onclick = () => showScreen("commodities");
+
+            const pattern = tilePattern[index] || {
+              cols: 3,
+              rows: 1,
+              scale: "is-compact",
+            };
+            const ramp = Math.min(1, Math.abs(item.change) / 6);
+            const greenStops = [
+              "#18dc83",
+              "#12d778",
+              "#10c96d",
+              "#08b960",
+              "#00984f",
+            ];
+            const redStops = [
+              "#ff8f91",
+              "#ff6c70",
+              "#ff444b",
+              "#fa2026",
+              "#ed0000",
+            ];
+            const colorIndex = Math.min(4, Math.floor(ramp * 5));
+            const directionClass =
+              item.change === 0 ? "h-flat" : item.change < 0 ? "h-dn" : "h-up";
+            const compactClass = pattern.cols <= 3 ? "is-compact" : "";
+            const cellColor =
+              item.change === 0
+                ? "#c9d7d1"
+                : item.change < 0
+                  ? redStops[colorIndex]
+                  : greenStops[colorIndex];
+
+            el.className = `heat-cell ${directionClass} ${compactClass} ${pattern.scale}`;
+            el.style.gridColumn = `span ${pattern.cols}`;
+            el.style.gridRow = `span ${pattern.rows}`;
+            el.style.background = cellColor;
+            el.title = `${item.name}: ${item.change > 0 ? "+" : ""}${item.change}% change, ${item.volume}x volume`;
+
+            el.innerHTML = `
+            <span class="heat-name">${item.name}</span>
+            <span class="heat-meta">
+              <span class="heat-change">${item.change > 0 ? "+" : ""}${item.change}%</span>
+              <span class="heat-volume">${item.volume}x</span>
+            </span>
+            <span class="heat-hover">
+              <span class="heat-hover-title">${item.name}</span>
+              <span class="heat-hover-sub">${item.company}</span>
+              <span class="heat-hover-row"><span>Price</span><strong>${item.price.toLocaleString()}</strong></span>
+              <span class="heat-hover-row"><span>Change</span><strong>${item.change > 0 ? "+" : ""}${item.change}%</strong></span>
+              <span class="heat-hover-row"><span>Volume</span><strong>${item.volume}x</strong></span>
+            </span>
+          `;
+            container.appendChild(el);
+          });
+      }
+      renderHeatmap();
 
       function toggleProfilePanel() {
         const panel = document.getElementById('profile-panel');

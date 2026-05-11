@@ -1,0 +1,13 @@
+# Added by code-review-graph
+.code-review-graph/
+#used only for local development
+.kiro/
+.claude/
+.cursorrules
+.mcp.json
+.opencode.json
+.windsurfrules
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.code-review-graph/
